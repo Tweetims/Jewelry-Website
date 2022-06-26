@@ -1,0 +1,20 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "docker-compose up --build",
+            "name": "docker compose up",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
+            "command": "docker-compose down",
+            "name": "docker stop",
+            "request": "launch",
+            "type": "node-terminal"
+        }
+    ]
+}
