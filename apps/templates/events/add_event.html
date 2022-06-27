@@ -1,0 +1,123 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% load embed_video_tags %}
+
+{% block title %} Add Event {% endblock %} 
+
+{% block body_class %} sign-in-basic {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  {% include 'includes/navigation-transparent.html' %} 
+  
+  <div class="page-header align-items-start min-vh-100" style="background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');" loading="lazy">
+    <span class="mask bg-gradient-dark opacity-6"></span>
+    <div class="container my-auto">
+      <div class="row">
+
+        <div class="col-xl-5 col-lg-6 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
+          <div class="card d-flex blur justify-content-center shadow-lg my-sm-0 my-sm-6 mt-8 mb-5">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
+                <center>
+                  <h3 class="text-white text-primary mb-0">Add Course</h3>
+                </center>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="pb-3">
+                For further questions, comments, concerns, or ideas, please email jewelrycreationstudio@gmail.com
+                or contact using our contact form.
+              </p>
+              <form id="contact-form" method=POST autocomplete="on">
+                {% csrf_token %}
+                <div class="card-body p-0 my-3">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="input-group input-group-static mb-4">
+                        <label>Full Name</label>
+                        <input type="email" class="form-control" placeholder="Full Name">
+                      </div>
+                    </div>
+                    <div class="col-md-6 ps-md-2">
+                      <div class="input-group input-group-static mb-4">
+                        <label>Email</label>
+                        <input type="email" class="form-control" placeholder="jewelrycreationstudio@gmail.com">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group mb-0 mt-md-0 mt-4">
+                    <div class="input-group input-group-static mb-4">
+                      <label>How can we help you?</label>
+                      <textarea name="message" class="form-control" id="message" rows="6" placeholder="Describe your problem in at least 250 characters"></textarea>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <button type="submit" class="btn bg-gradient-primary mt-3 mb-0">Send Message</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-8 col-12 mx-auto">
+          <div class="card z-index-0 fadeIn3 fadeInBottom">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Add Event To Database</h4>
+              </div>
+            </div>
+            <div class="card-body">
+              <form role="form" class="text-start" action="" method=POST>
+                {% if submitted %}
+                    <center>
+                        Event Submitted Successfully!
+                        <br/>
+                        {% csrf_token %}
+                        <input onclick="window.location.href='/add_event'" value="Refresh" class="btn bg-gradient-primary w-100 my-4 mb-2"></input>
+                    </center>
+                {% else %}
+                    {% for item in videos %}
+                        {{ item.title }}
+                        {% video item.url '426x240' %}
+                    {% endfor %}
+                    <form action="" method=POST>
+                        {% csrf_token %}
+
+                        {{ form }}
+
+                        <input type="submit" value="Submit" class="btn bg-gradient-primary w-100 my-4 mb-2"></input>
+                    </form>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'includes/footer-auth.html' %} 
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+    $(document).ready(function() {
+       $('#id_event_date').datepicker({
+            firstDay: 1,
+            dateFormat: "yy-mm-dd",
+            defaultDate: 0,
+            minDate: 0
+        });
+    });
+</script>
+{% endblock javascripts %}

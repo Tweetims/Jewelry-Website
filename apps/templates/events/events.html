@@ -1,15 +1,15 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Events {% endblock %} 
+{% block title %} Courses {% endblock %} 
 
-{% block body_class %} events {% endblock %}
+{% block body_class %} courses {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-  {% include 'includes/navigation-transparent.html' %}
+  {% include 'includes/navigation.html' %}
 
   <header class="bg-gradient-dark">
     <div class="page-header min-vh-75" style="background-image: url('{{ ASSETS_ROOT }}/img/bg9.jpg');">
@@ -17,8 +17,8 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-8 text-center mx-auto my-auto">
-            <h1 class="text-white">Events</h1>
-            <p class="lead mb-4 text-white opacity-8">Upcoming and past events</p>
+            <h1 class="text-white">Courses</h1>
+            <p class="lead mb-4 text-white opacity-8">Upcoming and past Courses</p>
           </div>
         </div>
       </div>

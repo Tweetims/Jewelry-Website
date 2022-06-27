@@ -11,10 +11,15 @@ urlpatterns = [
     # The home page
     path('', views.index, name='home'),
     
-    path('events', views.events, name='events'),
-    path('events/<int:year>/<str:month>/', views.events, name='events'),
+    path('courses', views.events, name='events'),
+    path('courses/<int:year>/<str:month>/', views.events, name='events'),
     
-    path('events/all', views.event_list, name='event_list'),
+    path('courses/all', views.event_list, name='event_list'),
+    path('courses/add', views.add_event, name='add_event'),
+    
+    
+    path('about', views.about, name='about'),
+    path('contact', views.contact, name='contact'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
