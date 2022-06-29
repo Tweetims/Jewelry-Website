@@ -101,7 +101,7 @@ def add_event(request):
         form = EventForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/add_event?submitted=True')
+            return HttpResponseRedirect('/courses/add?submitted=True')
     else:
         form = EventForm
         if 'submitted' in request.GET:
@@ -114,4 +114,41 @@ def add_event(request):
     }
     html_template = loader.get_template('events/add_event.html')
     return HttpResponse(html_template.render(context, request))
+
+
+@staff_member_required
+def edit_event(request):
+    searched_event = Event.objects.all()
+    context = {
+        'event_list': searched_event
+    }
+    html_template = loader.get_template('events/event_edit.html')
+    return HttpResponse(html_template.render(context, request))
     
+    
+@staff_member_required
+def edit_event_id(request, event_id):
+    try:
+        searched_event = Event.objects.get(pk=event_id)
+    except Event.DoesNotExist:
+        return HttpResponseRedirect('/courses/edit')
+    form = EventForm(request.POST or None, instance=searched_event)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/courses/edit')
+    context = {
+        'event': searched_event,
+        'form': form
+    }
+    html_template = loader.get_template('events/event_edit_id.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@staff_member_required
+def delete_event_id(request, event_id):
+    try:
+        searched_event = Event.objects.get(pk=event_id)
+        searched_event.delete()
+    except Event.DoesNotExist:
+        pass
+    return HttpResponseRedirect('/courses/edit')

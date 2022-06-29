@@ -22,32 +22,26 @@
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
               <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
                 <center>
-                  <h3 class="text-white text-primary mb-0">Add Course</h3>
+                  <h3 class="text-white text-primary mb-0">Edit Course: {{ event.name }}</h3>
                 </center>
               </div>
             </div>
             <div class="card-body">
               <form id="add-event-form" method=POST autocomplete="on">
                 {% csrf_token %}
-                {% if submitted %}
-                  <center>
-                    Event Submitted Successfully!
-                    <br/>
-                    <input onclick="window.location.href='/courses/add'" value="Refresh" class="btn bg-gradient-primary w-100 my-4 mb-2"></input>
-                  </center>
-                {% else %}
-                    <div class="row">
-                      <div class="input-group input-group-static mb-4">
-                      {% for item in form %}
-                        {{ item.label }}
-                        {{ item }}
-                      {% endfor %}
-                      </div>
-                    </div>
-                    <center>
-                      <input type="submit" value="Submit" class="btn bg-gradient-primary w-100 my-4 mb-2"></input>
-                    </center>
-                {% endif %}
+                <div class="row">
+                  <div class="input-group input-group-static mb-4">
+                  {% for item in form %}
+                    {{ item.label }}
+                    {{ item }}
+                  {% endfor %}
+                  </div>
+                </div>
+                <center>
+                  <input type="submit" value="Submit" class="btn bg-gradient-primary w-30 my-4 mb-2"></input>
+                  <div class="btn w-20 my-4 mb-2"></div>
+                  <a class="btn bg-gradient-danger w-30 my-4 mb-2" href="{% url 'delete_event_id' event_id=event.id %}">Delete</a>
+                </center>
               </form>
             </div>
           </div>
@@ -58,7 +52,6 @@
   </div>
 
 {% endblock content %}
-
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>

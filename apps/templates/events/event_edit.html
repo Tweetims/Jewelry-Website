@@ -22,33 +22,59 @@
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
               <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
                 <center>
-                  <h3 class="text-white text-primary mb-0">Add Course</h3>
+                  <h3 class="text-white text-primary mb-0">Edit Course</h3>
                 </center>
               </div>
             </div>
             <div class="card-body">
-              <form id="add-event-form" method=POST autocomplete="on">
-                {% csrf_token %}
-                {% if submitted %}
-                  <center>
-                    Event Submitted Successfully!
-                    <br/>
-                    <input onclick="window.location.href='/courses/add'" value="Refresh" class="btn bg-gradient-primary w-100 my-4 mb-2"></input>
-                  </center>
-                {% else %}
-                    <div class="row">
-                      <div class="input-group input-group-static mb-4">
-                      {% for item in form %}
-                        {{ item.label }}
-                        {{ item }}
-                      {% endfor %}
-                      </div>
-                    </div>
-                    <center>
-                      <input type="submit" value="Submit" class="btn bg-gradient-primary w-100 my-4 mb-2"></input>
-                    </center>
-                {% endif %}
-              </form>
+              <table class="table table-bordered table-hover table-responsive">
+                <tr>
+                  <th>
+                    Name
+                  </th>
+                  <th>
+                    Date
+                  </th>
+                  <th>
+                    Time
+                  </th>
+                  <th>
+                    Description
+                  </th>
+                  <th>
+                    Attendees
+                  </th>
+                  <th>
+                    Seats
+                  </th>
+                </tr>
+                {% for event in event_list %}
+                  <tr>
+                    <th class="text-wrap col-sm-2">
+                      <strong>
+                        <a href="{% url 'edit_event_id' event_id=event.id %}">
+                          {{ event }}
+                        </a>
+                      </strong>
+                    </th>
+                    <td>
+                      {{ event.event_date|date:'M d, Y' }}
+                    </td>
+                    <td>
+                      {{ event.event_time }}
+                    </td>
+                    <td class="text-wrap">
+                      {{ event.description }}
+                    </td>
+                    <td>
+                      {{ event.attendees.count }}
+                    </td>
+                    <td>
+                      {{ event.maximum_capacity }}
+                    </td>
+                  </tr>  
+                {% endfor %}
+              </table>
             </div>
           </div>
         </div>
@@ -58,7 +84,6 @@
   </div>
 
 {% endblock content %}
-
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>

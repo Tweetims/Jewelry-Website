@@ -3,7 +3,10 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from datetime import datetime
+from enum import auto
 from django.db import models
+from uuid import uuid4
  
 class WebsiteUser(models.Model):
     first_name = models.CharField(max_length=256)
@@ -16,7 +19,8 @@ class WebsiteUser(models.Model):
     
 class Event(models.Model):
     name = models.CharField('Event Name', max_length=256)
-    event_date = models.DateTimeField('Event Date')
+    event_date = models.DateField('Event Date')
+    event_time = models.TimeField('Event Time', default='12:00')
     description = models.TextField('Event Description', max_length=256)
     attendees = models.ManyToManyField(WebsiteUser, blank=True)
     course_fee = models.PositiveIntegerField('Course Fee', blank=True, default=200)

@@ -11,22 +11,35 @@ class EventForm(ModelForm):
                 "placeholder": "Event Name",
                 "class": "form-control"
             }
-        ))
+        ),
+        label='Name')
     event_date = forms.CharField(
         widget=forms.DateInput(
             attrs={
-                "placeholder": datetime.date(datetime.now()),
+                "placeholder": "Date",
                 "class": "form-control",
                 'value': datetime.date(datetime.now())
             }
-        ))
+        ),
+        label='Date')
+    event_time = forms.CharField(
+        widget=forms.TimeInput(
+            attrs={
+                "placeholder": 'Time',
+                "class": "form-control",
+                'value': "12:00"
+            }
+        ),
+        label='Time')
     description = forms.CharField(
         widget=forms.Textarea(
             attrs={
                 "placeholder": "Event Description",
-                "class": "form-control"
+                "class": "form-control",
+                "rows": "4"
             }
-        ))
+        ),
+        label='Description')
     course_fee = forms.IntegerField(
         widget=forms.NumberInput(
             attrs={
@@ -35,7 +48,8 @@ class EventForm(ModelForm):
                 'value': 200,
                 'min': 0
             }
-        ))
+        ),
+        label='Fee')
     maximum_capacity = forms.IntegerField(
         widget=forms.NumberInput(
             attrs={
@@ -45,9 +59,10 @@ class EventForm(ModelForm):
                 'min': 1,
                 'max': 15
             }
-        ))
+        ),
+        label='Seats')
     
     class Meta:
         model = Event
-        fileds = ('name', 'event_date', 'description', 'course_fee',)
+        fileds = ('name', 'event_date', 'event_time', 'description', 'course_fee',)
         exclude = ('attendees',)
