@@ -3,7 +3,6 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from datetime import datetime
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -62,27 +61,7 @@ def contact(request):
     context = {}
     html_template = loader.get_template('home/contact-us.html')
     return HttpResponse(html_template.render(context, request))
-    
-@login_required(login_url="/login/")
-def events(request, year=datetime.today().year, month=datetime.today().strftime("%B")):
-    # convert month from name to number
-    month = month.title()
-    month_number = list(calendar.month_name).index(month)
-    month_number = int(month_number)
-    
-    # create calendar
-    cal = HTMLCalendar().formatmonth(
-        year,
-        month_number
-    )
-    context = {
-        "year": year,
-        "month": month,
-        "month_number": month_number,
-        "calendar": cal,
-    }
-    html_template = loader.get_template('events/events.html')
-    return HttpResponse(html_template.render(context, request))
+
 
 @login_required(login_url="/login/")
 def event_list(request):
