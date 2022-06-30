@@ -36,7 +36,7 @@
                     Date
                   </th>
                   <th>
-                    Time
+                    Start Time
                   </th>
                   <th>
                     Description
@@ -61,7 +61,7 @@
                       {{ event.event_date|date:'M d, Y' }}
                     </td>
                     <td>
-                      {{ event.event_time }}
+                      {{ event.start_time|time:'g:iA' }}
                     </td>
                     <td class="text-wrap">
                       {{ event.description }}

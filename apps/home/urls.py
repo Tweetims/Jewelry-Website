@@ -13,7 +13,8 @@ urlpatterns = [
     path('', home_views.index, name='home'),
     
     path('courses', calendar_views.event_calendar, name='events'),
-    #path('courses/<int:year>/<str:month>/', home_views.events, name='events'),
+    path('courses/<int:year>/<str:month>/', calendar_views.event_calendar, name='events_calendar'),
+    path('courses/<int:year>/<str:month>', calendar_views.event_calendar, name='events_calendar'),
     
     path('courses/all', home_views.event_list, name='event_list'),
     path('courses/add', home_views.add_event, name='add_event'),

@@ -22,15 +22,24 @@ class EventForm(ModelForm):
             }
         ),
         label='Date')
-    event_time = forms.CharField(
+    start_time = forms.CharField(
         widget=forms.TimeInput(
             attrs={
                 "placeholder": 'Time',
                 "class": "form-control",
-                'value': "12:00"
+                'value': "12:00 PM"
             }
         ),
-        label='Time')
+        label='Start Time')
+    end_time = forms.CharField(
+        widget=forms.TimeInput(
+            attrs={
+                "placeholder": 'Time',
+                "class": "form-control",
+                'value': "02:00 PM"
+            }
+        ),
+        label='End Time')
     description = forms.CharField(
         widget=forms.Textarea(
             attrs={

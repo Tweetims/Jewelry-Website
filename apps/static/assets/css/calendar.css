@@ -9,7 +9,7 @@
 }
 
 .calendar {
-    background: var(--bs-body-color);
+    background: var(--bs-gray-500);
     border-radius: 4px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
     height: 501px;
@@ -25,13 +25,42 @@
 }
 
 .month {
-    border-bottom: 1px solid rgba(73, 114, 133, .6);
+    border-bottom: 1px solid var(--bs-primary);
     display: flex;
     justify-content: space-between;
     padding: 20px 20px;
-    color: #dfebed;
+    color: var(--bs-gray);
     font-size: 1.4em;
-    font-weight: 300;
+    font-weight: 500;
+}
+
+.icon.month{
+    position: absolute;
+    top: 4em;
+    right: 1em;
+    border: none;
+    padding: 0;
+    width: 2em;
+    height: 2em;
+}
+
+.icon.month.next{
+    right: 1em;
+}
+
+.icon.month.prev{
+    right: 4em;
+}
+
+.icon.month a {
+    width: 100%;
+}
+
+.icon.month a i {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 0.5em;
 }
 
 .date a.active {
@@ -40,7 +69,7 @@
 
 
 .calendar tbody>tr+tr {
-    color: #dfebed;
+    color: var(--bs-gray);
     display: flex;
     justify-content: space-between;
     padding: 20px 20px;
@@ -54,9 +83,9 @@
 
 .calendar tbody > tr + tr td span a {
 	background-image: linear-gradient(195deg, var(--bs-primary) 0%, var(--bs-primary-2) 100%);
-	border-radius: 25%;
-	width: 38px;
-	height: 38px;
+	border-radius: 0.5rem;
+	width: 75px;
+	height: 32px;
 	display: table-cell;
 }
 

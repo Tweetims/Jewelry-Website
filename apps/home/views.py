@@ -10,8 +10,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 
-import calendar
-from calendar import HTMLCalendar
 from .models import Event
 from .forms import EventForm
 
