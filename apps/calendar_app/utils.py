@@ -41,6 +41,8 @@ class Calendar(HTMLCalendar):
 		bkw_date = ref_date
 		fwd_date += relativedelta(months=+1)
 		bkw_date += relativedelta(months=-1)
+  
+		# TODO: extend calendar class to more properly handle this chunk of code
 
 		cal = f'<table class="calendar"><tbody><div class="icon month prev"><a href="/courses/{bkw_date.year}/{bkw_date.strftime("%B")}/"><i class="fa fa-angle-left" aria-hidden="true"></i></a></div><div class="icon month next"><a href="/courses/{fwd_date.year}/{fwd_date.strftime("%B")}/"><i class="fa fa-angle-right" aria-hidden="true"></i></a></div>\n'
 		cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
