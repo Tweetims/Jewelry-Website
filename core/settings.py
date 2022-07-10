@@ -4,6 +4,9 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os, environ
+import django_heroku
+import dj_database_url
+from decouple import config
 
 env = environ.Env(
     # set casting, default value
@@ -152,4 +155,7 @@ STATICFILES_DIRS = (
 #############################################################
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-TIME_INPUT_FORMATS = ('%I:%M %p',)
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+django_heroku.settings(locals())
