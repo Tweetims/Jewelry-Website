@@ -1,1 +1,1 @@
-web: gunicorn <your_project_name>.wsgi --log-file -
+web: gunicorn jewelry-creations-studio.wsgi --log-file -
