@@ -13,9 +13,6 @@ from django.urls import reverse
 from .models import Event
 from .forms import EventForm
 
-# videos app models
-from apps.videos.models import Video
-
 
 def index(request):
     context = {'segment': 'index'}
@@ -83,11 +80,9 @@ def add_event(request):
         form = EventForm
         if 'submitted' in request.GET:
             submitted = True
-    videos = Video.objects.filter(title__contains='119')
     context = {
         'form': form,
-        'submitted': submitted,
-        'videos': videos
+        'submitted': submitted
     }
     html_template = loader.get_template('events/add_event.html')
     return HttpResponse(html_template.render(context, request))
