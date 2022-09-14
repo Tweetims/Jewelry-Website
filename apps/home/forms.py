@@ -1,19 +1,19 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Event
-
+from .models import Course
 from datetime import datetime
 
-class EventForm(ModelForm):
+
+class CourseForm(ModelForm):
     name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Event Name",
+                "placeholder": "Course Name",
                 "class": "form-control"
             }
         ),
         label='Name')
-    event_date = forms.CharField(
+    course_date = forms.CharField(
         widget=forms.DateInput(
             attrs={
                 "placeholder": "Date",
@@ -72,6 +72,6 @@ class EventForm(ModelForm):
         label='Seats')
     
     class Meta:
-        model = Event
-        fileds = ('name', 'event_date', 'event_time', 'description', 'course_fee',)
+        model = Course
+        fileds = ('name', 'course_date', 'course_time', 'description', 'course_fee',)
         exclude = ('attendees',)

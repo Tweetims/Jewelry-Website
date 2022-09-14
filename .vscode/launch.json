@@ -5,16 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "command": "docker-compose up --build",
-            "name": "docker compose up",
+            "type": "pwa-chrome",
+            "name": "http://192.168.0.41:8000/",
             "request": "launch",
-            "type": "node-terminal"
-        },
-        {
-            "command": "docker-compose down",
-            "name": "docker stop",
-            "request": "launch",
-            "type": "node-terminal"
+            "url": "http://192.168.0.41:8000/"
         }
     ]
 }

@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="card-body">
-              <form id="add-event-form" method=POST autocomplete="on">
+              <form id="add-course-form" method=POST autocomplete="on">
                 {% csrf_token %}
                 {% if submitted %}
                   <center>
@@ -56,6 +56,7 @@
     {% include 'includes/footer-auth.html' %} 
 
   </div>
+</div>
 
 {% endblock content %}
 
@@ -63,7 +64,7 @@
 {% block javascripts %}
 <script>
     $(document).ready(function() {
-       $('#id_event_date').datepicker({
+       $('#id_course_date').datepicker({
             firstDay: 1,
             dateFormat: "yy-mm-dd",
             defaultDate: 0,

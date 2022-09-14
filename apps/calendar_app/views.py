@@ -21,7 +21,7 @@ def get_date(req_day):
     return datetime.today()
 
 
-def event_calendar(request, year=datetime.today().year, month=datetime.today().strftime("%B")):
+def course_calendar(request, year=datetime.today().year, month=datetime.today().strftime("%B")):
     if request.path == '/courses':
         return HttpResponseRedirect(f'/courses/{year}/{month}/')
 
@@ -34,5 +34,5 @@ def event_calendar(request, year=datetime.today().year, month=datetime.today().s
         'calendar': mark_safe(html_cal)
     }
     
-    html_template = loader.get_template('events/event_list.html')
+    html_template = loader.get_template('courses/course_list.html')
     return HttpResponse(html_template.render(context, request))

@@ -5,17 +5,14 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.contrib import admin
 from .models import WebsiteUser
-from .models import Event
+from .models import Course
 
-#admin.site.register(WebsiteUser)
-#admin.site.register(Event)
-
-@admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'event_date')
-    ordering = ('-event_date',)
-    search_fields = ('name', 'event_date', 'description')
-    list_filter = ('name', 'event_date')
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'course_date')
+    ordering = ('-course_date',)
+    search_fields = ('name', 'course_date', 'description')
+    list_filter = ('name', 'course_date')
     
 
 @admin.register(WebsiteUser)

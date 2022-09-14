@@ -48,29 +48,29 @@
                     Seats
                   </th>
                 </tr>
-                {% for event in event_list %}
+                {% for course in course_list %}
                   <tr>
                     <th class="text-wrap col-sm-2">
                       <strong>
-                        <a href="{% url 'edit_event_id' event_id=event.id %}">
-                          {{ event }}
+                        <a href="{% url 'edit_course_id' course_id=course.id %}">
+                          {{ course }}
                         </a>
                       </strong>
                     </th>
                     <td>
-                      {{ event.event_date|date:'M d, Y' }}
+                      {{ course.course_date|date:'M d, Y' }}
                     </td>
                     <td>
-                      {{ event.start_time|time:'g:iA' }}
+                      {{ course.start_time|time:'g:iA' }}
                     </td>
                     <td class="text-wrap">
-                      {{ event.description }}
+                      {{ course.description }}
                     </td>
                     <td>
-                      {{ event.attendees.count }}
+                      {{ course.attendees.count }}
                     </td>
                     <td>
-                      {{ event.maximum_capacity }}
+                      {{ course.maximum_capacity }}
                     </td>
                   </tr>  
                 {% endfor %}
@@ -82,13 +82,14 @@
     {% include 'includes/footer-auth.html' %} 
 
   </div>
+</div>
 
 {% endblock content %}
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
     $(document).ready(function() {
-       $('#id_event_date').datepicker({
+       $('#id_course_date').datepicker({
             firstDay: 1,
             dateFormat: "yy-mm-dd",
             defaultDate: 0,

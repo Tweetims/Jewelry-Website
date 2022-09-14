@@ -10,8 +10,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 
-from .models import Event
-from .forms import EventForm
+from .models import Course
+from .forms import CourseForm
 
 
 def index(request):
@@ -20,10 +20,18 @@ def index(request):
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
+    
+def home_templates(request):
+    return request_template(request, 'home')
+
+def info_templates(request):
+    return request_template(request, 'info')
 
 @login_required(login_url="/login/")
-def pages(request):
-    context = {}
+def template_templates(request):
+    return request_template(request, 'templates')
+    
+def request_template(request, dir, context={}):
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
@@ -34,7 +42,7 @@ def pages(request):
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
 
-        html_template = loader.get_template('home/' + load_template)
+        html_template = loader.get_template(f'{dir}/{load_template}.html')
         return HttpResponse(html_template.render(context, request))
 
     except template.TemplateDoesNotExist:
@@ -45,82 +53,71 @@ def pages(request):
     except:
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
-    
-    
-def about(request):
-    context = {}
-    html_template = loader.get_template('home/about-us.html')
-    return HttpResponse(html_template.render(context, request))
-
-def contact(request):
-    context = {}
-    html_template = loader.get_template('home/contact-us.html')
-    return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")
-def event_list(request):
-    event_list = Event.objects.all()
+def course_list(request):
+    course_list = Course.objects.all()
     context = {
-        'event_list': event_list
+        'course_list': course_list
     }
-    html_template = loader.get_template('events/event_list.html')
+    html_template = loader.get_template('courses/course_list.html')
     return HttpResponse(html_template.render(context, request))
 
 
 @staff_member_required
-def add_event(request):
+def add_course(request):
     submitted = False
     if request.method == "POST":
-        form = EventForm(request.POST)
+        form = CourseForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/courses/add?submitted=True')
     else:
-        form = EventForm
+        form = CourseForm
         if 'submitted' in request.GET:
             submitted = True
     context = {
         'form': form,
         'submitted': submitted
     }
-    html_template = loader.get_template('events/add_event.html')
+    html_template = loader.get_template('courses/add_course.html')
     return HttpResponse(html_template.render(context, request))
 
 
 @staff_member_required
-def edit_event(request):
-    searched_event = Event.objects.all()
+def edit_course(request):
+    searched_course = Course.objects.all()
     context = {
-        'event_list': searched_event
+        'course_list': searched_course
     }
-    html_template = loader.get_template('events/event_edit.html')
+    html_template = loader.get_template('courses/course_edit.html')
     return HttpResponse(html_template.render(context, request))
     
     
 @staff_member_required
-def edit_event_id(request, event_id):
+def edit_course_id(request, course_id):
     try:
-        searched_event = Event.objects.get(pk=event_id)
-    except Event.DoesNotExist:
+        searched_course = Course.objects.get(pk=course_id)
+    except Course.DoesNotExist:
         return HttpResponseRedirect('/courses/edit')
-    form = EventForm(request.POST or None, instance=searched_event)
+    form = CourseForm(request.POST or None, instance=searched_course)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/courses/edit')
     context = {
-        'event': searched_event,
+        'course': searched_course,
         'form': form
     }
-    html_template = loader.get_template('events/event_edit_id.html')
+    html_template = loader.get_template('courses/course_edit_id.html')
     return HttpResponse(html_template.render(context, request))
 
 
 @staff_member_required
-def delete_event_id(request, event_id):
+def delete_course_id(request, course_id):
     try:
-        searched_event = Event.objects.get(pk=event_id)
-        searched_event.delete()
-    except Event.DoesNotExist:
+        searched_course = Course.objects.get(pk=course_id)
+        searched_course.delete()
+    except Course.DoesNotExist:
         pass
     return HttpResponseRedirect('/courses/edit')

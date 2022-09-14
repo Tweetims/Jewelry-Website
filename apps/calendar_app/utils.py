@@ -2,7 +2,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from calendar import HTMLCalendar
-from apps.home.models import Event
+from apps.home.models import Course
+
 
 class Calendar(HTMLCalendar):
 	def __init__(self, year=None, month=None):
@@ -11,12 +12,12 @@ class Calendar(HTMLCalendar):
 		super(Calendar, self).__init__()
 
 	# formats a day as a td
-	# filter events by day
-	def formatday(self, day, events):
-		events_per_day = events.filter(event_date__day=day)
+	# filter courses by day
+	def formatday(self, day, courses):
+		courses_per_day = courses.filter(course_date__day=day)
 		d = ''
-		for event in events_per_day:
-			d += f'<li> {event.name} </li>'
+		for course in courses_per_day:
+			d += f'<li> {course.name} </li>'
 
 		if day != 0:
 			if d:
@@ -25,16 +26,16 @@ class Calendar(HTMLCalendar):
 		return '<td></td>'
 
 	# formats a week as a tr 
-	def formatweek(self, theweek, events):
+	def formatweek(self, theweek, courses):
 		week = ''
 		for d, weekday in theweek:
-			week += self.formatday(d, events)
+			week += self.formatday(d, courses)
 		return f'<tr> {week} </tr>'
 
 	# formats a month as a table
-	# filter events by year and month
+	# filter courses by year and month
 	def formatmonth(self, withyear=True):
-		events = Event.objects.filter(event_date__year=self.year, event_date__month=self.month)
+		courses = Course.objects.filter(course_date__year=self.year, course_date__month=self.month)
   
 		ref_date = datetime(self.year, self.month, 1)
 		fwd_date = ref_date
@@ -48,7 +49,7 @@ class Calendar(HTMLCalendar):
 		cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
 		cal += f'{self.formatweekheader()}\n'
 		for week in self.monthdays2calendar(self.year, self.month):
-			cal += f'{self.formatweek(week, events)}\n'
-		padded_week = f"{self.formatweek([(0,1) for i in range(0, 7) ], events)}\n"
+			cal += f'{self.formatweek(week, courses)}\n'
+		padded_week = f"{self.formatweek([(0,1) for i in range(0, 7) ], courses)}\n"
 		cal += f'{padded_week}</tbody></table>'
 		return cal

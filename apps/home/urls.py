@@ -8,25 +8,25 @@ from apps.home import views as home_views
 from apps.calendar_app import views as calendar_views
 
 urlpatterns = [
-
-    # The home page
     path('', home_views.index, name='home'),
     
-    path('courses', calendar_views.event_calendar, name='events'),
-    path('courses/<int:year>/<str:month>/', calendar_views.event_calendar, name='events_calendar'),
-    path('courses/<int:year>/<str:month>', calendar_views.event_calendar, name='events_calendar'),
+    path('courses', calendar_views.course_calendar, name='courses'),
+    path('courses/<int:year>/<str:month>/', calendar_views.course_calendar, name='course_calendar'),
+    path('courses/<int:year>/<str:month>', calendar_views.course_calendar, name='course_calendar'),
     
-    path('courses/all', home_views.event_list, name='event_list'),
-    path('courses/add', home_views.add_event, name='add_event'),
-    path('courses/edit', home_views.edit_event, name='edit_event'),
-    path('courses/edit/<event_id>/', home_views.edit_event_id, name='edit_event_id'),
-    path('courses/delete/<event_id>/', home_views.delete_event_id, name='delete_event_id'),
+    path('courses/all', home_views.course_list, name='course_list'),
+    path('courses/add', home_views.add_course, name='add_course'),
+    path('courses/edit', home_views.edit_course, name='edit_course'),
+    path('courses/edit/<course_id>/', home_views.edit_course_id, name='edit_course_id'),
+    path('courses/delete/<course_id>/', home_views.delete_course_id, name='delete_course_id'),
     
     
-    path('about', home_views.about, name='about'),
-    path('contact', home_views.contact, name='contact'),
+    path('how-it-works', home_views.info_templates, name='how_it_works'),
+    path('about', home_views.home_templates, name='about'),
+    path('contact', home_views.home_templates, name='contact'),
 
-    # Matches any html file
-    re_path(r'^.*\.*', home_views.pages, name='pages'),
+    # Matches any html file within the templates dir
+    # also requires a login
+    re_path(r'^.*\.*', home_views.template_templates, name='pages'),
 
 ]
