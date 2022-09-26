@@ -1,32 +1,80 @@
 {% extends "layouts/base-fullscreen.html" %}
 
-{% load embed_video_tags %}
-
-{% block title %} Add Event {% endblock %} 
+{% block title %} {{ course.name }} {% endblock %}
 
 {% block body_class %} sign-in-basic {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+  <link href="{{ ASSETS_ROOT }}/css/courses.css?" rel="stylesheet" />
+{% endblock stylesheets %}
 
 {% block content %}
 
   {% include 'includes/navigation.html' %} 
   
-  <div class="page-header align-items-start min-vh-100" style="background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');" loading="lazy">
-    <span class="mask bg-gradient-dark opacity-6"></span>
+  <div class="page-header align-items-start min-vh-100">
+    <span class="mask bg-gradient-dark opacity-0"></span>
     <div class="container my-6">
       <div class="row">
         <div class="col-lg-6d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
           <div class="card d-flex blur justify-content-center shadow-lg my-sm-0 my-sm-6 mt-8 mb-5">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
               <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
-                <center>
-                  <h3 class="text-white text-primary mb-0">View Course: {{ course.name }}</h3>
-                </center>
+                  <h3 class="text-white text-primary mb-0 text-center">{{ course.name }}</h3>
               </div>
             </div>
             <div class="card-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-7 text-center mx-auto">
+                    Picture
+                  </div>
+                  <div class="col-lg-5 text-center mx-auto">
+                    <div class="row">
+                      <div class="course-date">
+                        {{ course.course_date }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="course-time">
+                        {{ course.start_time }} - {{ course.end_time }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="course-fee">
+                        ${{ course.course_fee }} per person
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion" id="accordion-panel">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="acordeon-h1">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#acordeon-c1" aria-expanded="true" aria-controls="acordeon-c1">
+                      About The Course
+                    </button>
+                  </h2>
+                  <div id="acordeon-c1" class="accordion-collapse collapse show" aria-labelledby="acordeon-h1">
+                    <div class="accordion-body">
+                      {{ course.description }}
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="acordeon-h2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acordeon-c2" aria-expanded="false" aria-controls="acordeon-c2">
+                      Cancellation/Refund Policy
+                    </button>
+                  </h2>
+                  <div id="acordeon-c2" class="accordion-collapse collapse" aria-labelledby="acordeon-h2">
+                    <div class="accordion-body">
+                      <strong>All sales are final.</strong> There are no refunds offered. Cancellations can be made at least <strong>One</strong> hour before the class starts
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

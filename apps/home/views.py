@@ -24,14 +24,17 @@ def index(request):
 def home_templates(request):
     return request_template(request, 'home')
 
+
 def info_templates(request):
     return request_template(request, 'info')
+
 
 @login_required(login_url="/login/")
 def template_templates(request):
     return request_template(request, 'templates')
-    
-def request_template(request, dir, context={}):
+
+
+def request_template(request, directory, context={}):
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
@@ -42,7 +45,13 @@ def request_template(request, dir, context={}):
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
 
-        html_template = loader.get_template(f'{dir}/{load_template}.html')
+        try:
+            html_template = loader.get_template(f'{directory}/{load_template}.html')
+        except:
+            try:
+                html_template = loader.get_template(f'{directory}/{load_template}')
+            except:
+                html_template = loader.get_template('home/page-404.html')
         return HttpResponse(html_template.render(context, request))
 
     except template.TemplateDoesNotExist:
@@ -92,6 +101,15 @@ def edit_course(request):
         'course_list': searched_course
     }
     html_template = loader.get_template('courses/course_edit.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+def course_view(request, course_id):
+    searched_course = Course.objects.get(pk=course_id)
+    context = {
+        'course': searched_course
+    }
+    html_template = loader.get_template('courses/course_view_id.html')
     return HttpResponse(html_template.render(context, request))
     
     
