@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # running migrations
+run python manage.py collectstatic
 RUN python manage.py migrate
 
 # gunicorn
