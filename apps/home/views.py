@@ -7,11 +7,12 @@ from django import template
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
 
 from .models import Course
-from .forms import CourseForm
+from .forms import CourseForm, CourseSignUpForm
 
 
 def index(request):
@@ -29,7 +30,7 @@ def info_templates(request):
     return request_template(request, 'info')
 
 
-@login_required(login_url="/login/")
+@login_required(redirect_field_name='next', login_url="/login/")
 def template_templates(request):
     return request_template(request, 'templates')
 
@@ -64,13 +65,37 @@ def request_template(request, directory, context={}):
         return HttpResponse(html_template.render(context, request))
 
 
-@login_required(login_url="/login/")
+@login_required(redirect_field_name='next', login_url="/login/")
 def course_list(request):
     course_list = Course.objects.all()
     context = {
         'course_list': course_list
     }
     html_template = loader.get_template('courses/course_list.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(redirect_field_name='next', login_url="/login/")
+def course_sign_up(request, course_id):
+    submitted = False
+    try:
+        searched_course = Course.objects.get(pk=course_id)
+    except Course.DoesNotExist:
+        return HttpResponseRedirect('/courses')
+    form = CourseSignUpForm(request.POST or None, instance=searched_course)
+    if request.method == "POST":
+        if form.is_valid():
+            if not request.user.is_authenticated:
+                return redirect(f'/courses/view/{course_id}/')
+        return HttpResponseRedirect('/courses')
+    else:
+        if 'submitted' in request.GET:
+            submitted = True
+    context = {
+        'course': searched_course,
+        'form': form
+    }
+    html_template = loader.get_template(f'courses/course_signup.html')
     return HttpResponse(html_template.render(context, request))
 
 
@@ -105,7 +130,12 @@ def edit_course(request):
 
 
 def course_view(request, course_id):
-    searched_course = Course.objects.get(pk=course_id)
+    if request.POST:
+        return HttpResponseRedirect(f'/courses/signup/{course_id}/')
+    try:
+        searched_course = Course.objects.get(pk=course_id)
+    except Course.DoesNotExist:
+        return HttpResponseRedirect('/courses')
     context = {
         'course': searched_course
     }

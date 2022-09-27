@@ -17,7 +17,7 @@ class Calendar(HTMLCalendar):
         courses_per_day = courses.filter(course_date__day=day)
         d = ''
         for course in courses_per_day:
-            d += f"<a href='/courses/view/{course.id}' class='active'>{course.name}</a>"
+            d += f"<a href='/courses/view/{course.id}/' class='active'>{course.name}</a>"
 
         if day != 0:
             if d:

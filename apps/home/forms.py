@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm
+from django.core.exceptions import ValidationError
 from .models import Course
 from datetime import datetime
 
@@ -70,8 +71,38 @@ class CourseForm(ModelForm):
             }
         ),
         label='Seats')
-    
+
     class Meta:
         model = Course
         fileds = ('name', 'course_date', 'course_time', 'description', 'course_fee',)
         exclude = ('attendees',)
+
+
+class CourseSignUpForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        '''
+        course = Course.objects.filter(
+            pk=self.instance.id
+        )
+        max_book = self.instance.maximum_capacity - course[0].attendees.count()
+        self.fields['seats'].widget.attrs['max'] = max_book
+        '''
+
+    seats = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                "placeholder": "0",
+                "class": "form-control",
+                'value': 0,
+                'min': 1,
+                'max': 1
+            }
+        ),
+        label='Book Seats')
+
+    class Meta:
+        model = Course
+        fileds = ('seats',)
+        exclude = ('name', 'course_date', 'course_time', 'description', 'course_fee',
+                   'start_time', 'end_time', 'attendees', 'maximum_capacity',)

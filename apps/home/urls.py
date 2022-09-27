@@ -15,11 +15,12 @@ urlpatterns = [
     path('courses/<int:year>/<str:month>', calendar_views.course_calendar, name='course_calendar'),
     
     path('courses/all', home_views.course_list, name='course_list'),
-    path('courses/view/<course_id>', home_views.course_view, name='course_view'),
+    path('courses/view/<course_id>/', home_views.course_view, name='course_view'),
     path('courses/add', home_views.add_course, name='add_course'),
     path('courses/edit', home_views.edit_course, name='edit_course'),
     path('courses/edit/<course_id>/', home_views.edit_course_id, name='edit_course_id'),
     path('courses/delete/<course_id>/', home_views.delete_course_id, name='delete_course_id'),
+    path('courses/signup/<course_id>/', home_views.course_sign_up, name='course_sign_up'),
     
     
     path('how-it-works', home_views.info_templates, name='how_it_works'),

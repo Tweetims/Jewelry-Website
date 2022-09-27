@@ -2,7 +2,6 @@
     display: flex;
 }
 
-
 .course-date {
 	font-size: 1.5em;
 	font-weight: 600;
@@ -11,4 +10,9 @@
 .course-time, .course-fee {
 	font-size: 1.5em;
 	font-weight: 500;
+}
+
+.errorlist {
+    color: red;
+    list-style: none;
 }
