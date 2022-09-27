@@ -30,7 +30,6 @@ def info_templates(request):
     return request_template(request, 'info')
 
 
-@login_required(redirect_field_name='next', login_url="/login/")
 def template_templates(request):
     return request_template(request, 'templates')
 
