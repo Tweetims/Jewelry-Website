@@ -6,14 +6,19 @@ Copyright (c) 2019 - present AppSeed.us
 from datetime import datetime
 from enum import auto
 from django.db import models
+from django.contrib.auth import get_user_model
 from uuid import uuid4
 
+
+User=get_user_model()
 
 class WebsiteUser(models.Model):
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     email = models.EmailField('User Email', max_length=256)
     phone = models.CharField('User Phone Number', max_length=20, blank=True)
+    account = models.ForeignKey(User, on_delete=models.CASCADE)
+
     
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
@@ -24,7 +29,7 @@ class Course(models.Model):
     course_date = models.DateField('Course Date')
     start_time = models.TimeField('Start Time', default='12:00')
     end_time = models.TimeField('End Time', default='13:00')
-    description = models.TextField('Course Description', max_length=256)
+    description = models.TextField('Course Description', max_length=2048)
     attendees = models.ManyToManyField(WebsiteUser, blank=True)
     course_fee = models.PositiveIntegerField('Course Fee', blank=True, default=200)
     maximum_capacity = models.PositiveIntegerField('Maximum Capacity', blank=True, default=10)
