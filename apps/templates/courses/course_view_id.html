@@ -28,39 +28,63 @@
               <div class="container">
                 <div class="row">
                   <div class="col-lg-7 text-center mx-auto">
-                    Picture
-                  </div>
-                  <div class="col-lg-5 text-center mx-auto">
-                    <div class="row">
-                      <div class="course-date">
-                        {{ course.course_date }}
+                    <div id="CarouselWithControls" class="carousel slide" data-ride="carousel">
+                      <div class="carousel-inner">
+                      {% for design in course.designs.all %}
+                        {% with design.images.all|first as image %}
+                          {% if forloop.first %}
+                            <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                              <img src="/media/{{ image }}" class="d-block w-100">
+                            </div>
+                          {% else %}
+                            <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                              <img src="/media/{{ image }}" class="d-block w-100">
+                            </div>
+                          {% endif %}
+                          <a class="carousel-control-prev" href="#CarouselWithControls" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                          <a class="carousel-control-next" href="#CarouselWithControls" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                        {% endwith %}
+                      {% endfor %}
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="course-time">
-                        {{ course.start_time }} - {{ course.end_time }}
-                      </div>
                     </div>
-                    <div class="row">
-                      <div class="course-fee">
-                        {{ form.seats.field.widget.attrs.max }} seats left
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="course-fee">
-                        ${{ course.course_fee }} per person
-                      </div>
-                    </div>
-                    <form id="course-signup-form" method=POST autocomplete="on">
-                      {% csrf_token %}
+                    <div class="col-lg-5 text-center mx-auto">
                       <div class="row">
-                        <div class="input-group input-group-static mb-4">
-                        {{ form }}
+                        <div class="course-date">
+                          {{ course.course_date }}
                         </div>
                       </div>
-                      <input type="submit" value="Book Course" class="btn bg-gradient-primary w-30 my-4 mb-2">
-                    </form>
-                  </div>
+                      <div class="row">
+                        <div class="course-time">
+                          {{ course.start_time }} - {{ course.end_time }}
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="course-fee">
+                          {{ seats_left }}
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="course-fee">
+                          ${{ course.course_fee }} per person
+                        </div>
+                      </div>
+                      <form id="course-signup-form" method=POST autocomplete="on">
+                        {% csrf_token %}
+                        <div class="row">
+                          <div class="input-group input-group-static mb-4">
+                          {{ form }}
+                          </div>
+                        </div>
+                        <input type="submit" value="Book Course" class="btn bg-gradient-primary w-100 my-4 mb-2">
+                      </form>
+                    </div>
                 </div>
               </div>
               <div class="accordion" id="accordion-panel">
@@ -78,13 +102,13 @@
                 </div>
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="acordeon-h2">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acordeon-c2" aria-expanded="false" aria-controls="acordeon-c2">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#acordeon-c2" aria-expanded="true" aria-controls="acordeon-c2">
                       Cancellation/Refund Policy
                     </button>
                   </h2>
-                  <div id="acordeon-c2" class="accordion-collapse collapse" aria-labelledby="acordeon-h2">
+                  <div id="acordeon-c2" class="accordion-collapse collapse show" aria-labelledby="acordeon-h2">
                     <div class="accordion-body">
-                      <strong>All sales are final.</strong> There are no refunds offered. Cancellations can be made at least <strong>Three business days</strong> before the class starts
+                      <strong>All sales are final after the cancellation period.</strong> There are no refunds offered. Cancellations can be made at least <strong>three business days</strong> before the class starts
                     </div>
                   </div>
                 </div>

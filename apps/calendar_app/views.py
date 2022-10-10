@@ -29,9 +29,12 @@ def course_calendar(request, year=datetime.today().year, month=datetime.today().
     cal = Calendar(year, strptime(month, '%B').tm_mon)
 
     # Call the formatmonth method, which returns our calendar as a table
-    html_cal = cal.formatmonth(withyear=True)
+    cal_data = cal.get_month()
     context = {
-        'calendar': mark_safe(html_cal)
+        'calendar': cal_data['calendar'],
+        'month': month,
+        'prev': cal_data['prev'],
+        'next': cal_data['next']
     }
     
     html_template = loader.get_template('courses/course_list.html')

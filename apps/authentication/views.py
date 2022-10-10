@@ -7,6 +7,8 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm
+from django.contrib.auth.models import User, Group
+from apps.home.models import WebsiteUser
 
 
 def login_view(request):
@@ -41,15 +43,15 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
-
-            msg = 'User created - please <a href="/login">login</a>.'
-            success = True
-
-            # return redirect("/login/")
+            group = Group.objects.get(name='customer')
+            user.groups.add(group)
+            WebsiteUser.objects.create(
+                account=user,
+                email=user.email
+            )
+            return redirect('/account')
 
         else:
             msg = 'Form is not valid'

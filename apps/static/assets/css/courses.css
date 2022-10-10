@@ -16,3 +16,8 @@
     color: red;
     list-style: none;
 }
+
+.ruby-r {
+    display: ruby;
+    text-align: right;
+}

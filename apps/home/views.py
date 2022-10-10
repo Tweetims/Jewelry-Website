@@ -10,9 +10,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
+from apps.authentication.decorators import allowed_users
 
 from .models import Course
-from .forms import CourseForm, CourseSignUpForm
+from .forms import CourseForm, CourseSignUpForm, WebsiteUserForm
 
 
 def index(request):
@@ -45,13 +46,16 @@ def request_template(request, directory, context={}):
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
 
-        try:
-            html_template = loader.get_template(f'{directory}/{load_template}.html')
-        except:
+        if request.path.startswith('/media'):
+            return
+        else:
             try:
-                html_template = loader.get_template(f'{directory}/{load_template}')
+                html_template = loader.get_template(f'{directory}/{load_template}.html')
             except:
-                html_template = loader.get_template('home/page-404.html')
+                try:
+                    html_template = loader.get_template(f'{directory}/{load_template}')
+                except:
+                    html_template = loader.get_template('home/page-404.html')
         return HttpResponse(html_template.render(context, request))
 
     except template.TemplateDoesNotExist:
@@ -86,12 +90,16 @@ def course_sign_up(request, course_id):
         if form.is_valid():
             if not request.user.is_authenticated:
                 return redirect(f'/courses/view/{course_id}/')
+            searched_course.attendees.add(request.user.websiteuser)
         return HttpResponseRedirect('/courses')
     else:
         if 'submitted' in request.GET:
             submitted = True
+    num_seats = searched_course.maximum_capacity - searched_course.attendees.count()
+    seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
     context = {
         'course': searched_course,
+        'seats_left': seats,
         'form': form
     }
     html_template = loader.get_template(f'courses/course_signup.html')
@@ -135,7 +143,10 @@ def course_view(request, course_id):
         searched_course = Course.objects.get(pk=course_id)
     except Course.DoesNotExist:
         return HttpResponseRedirect('/courses')
+    num_seats = searched_course.maximum_capacity - searched_course.attendees.count()
+    seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
     context = {
+        'seats_left': seats,
         'course': searched_course
     }
     html_template = loader.get_template('courses/course_view_id.html')
@@ -168,3 +179,29 @@ def delete_course_id(request, course_id):
     except Course.DoesNotExist:
         pass
     return HttpResponseRedirect('/courses/edit')
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def user_page(request):
+    form = WebsiteUserForm(instance=request.user.websiteuser)
+    context = {
+        'form': form
+    }
+    html_template = loader.get_template('accounts/user.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def user_settings(request):
+    form = WebsiteUserForm(request.POST or None, instance=request.user.websiteuser)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('/account')
+    context = {
+        'form': form
+    }
+    html_template = loader.get_template('accounts/user_settings.html')
+    return HttpResponse(html_template.render(context, request))
+

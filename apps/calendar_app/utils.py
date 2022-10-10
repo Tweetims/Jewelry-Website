@@ -1,8 +1,9 @@
-from datetime import datetime
+import datetime
 from dateutil.relativedelta import relativedelta
 
 from calendar import HTMLCalendar
 from apps.home.models import Course
+import calendar
 
 
 class Calendar(HTMLCalendar):
@@ -35,10 +36,18 @@ class Calendar(HTMLCalendar):
 
     # formats a month as a table
     # filter courses by year and month
-    def formatmonth(self, withyear=True):
+    def get_month(self):
+        course_data = {}
         courses = Course.objects.filter(course_date__year=self.year, course_date__month=self.month)
+        for course in courses:
+            if not course_data.get(course.course_date.day):
+                course_data[course.course_date.day] = []
+            course_data[course.course_date.day].append({
+                'id': course.id,
+                'name': course.name
+            })
 
-        ref_date = datetime(self.year, self.month, 1)
+        ref_date = datetime.datetime(self.year, self.month, 1)
         fwd_date = ref_date
         bkw_date = ref_date
         fwd_date += relativedelta(months=+1)
@@ -46,11 +55,24 @@ class Calendar(HTMLCalendar):
 
         # TODO: extend calendar class to more properly handle this chunk of code
         # this is extremely slow
-
-        cal = f'<table class="calendar"><tbody><div class="icon month prev"><a href="/courses/{bkw_date.year}/{bkw_date.strftime("%B")}/"><i class="fa fa-angle-left" aria-hidden="true"></i></a></div><div class="icon month next"><a href="/courses/{fwd_date.year}/{fwd_date.strftime("%B")}/"><i class="fa fa-angle-right" aria-hidden="true"></i></a></div>\n'
-        cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
-        cal += f'{self.formatweekheader()}\n'
-        for week in self.monthdays2calendar(self.year, self.month):
-            cal += f'{self.formatweek(week, courses)}\n'
-        cal += f'</tbody></table>'
+        cal_info = calendar.monthcalendar(self.year, self.month)
+        cal_month = []
+        for i in range(len(cal_info)):
+            cal_week = []
+            for j in range(len(cal_info[i])):
+                if cal_info[i][j] == 0:
+                    cal_week.append({'day': -1, 'courses': []})
+                    continue
+                day = {'day': cal_info[i][j], 'courses': []}
+                if day['day'] in course_data:
+                    for course in course_data[day['day']]:
+                        day['courses'].append({'id': course['id'], 'name': course['name']})
+                cal_week.append(day)
+            cal_month.append(cal_week)
+        self.formatweekheader()
+        cal = {
+            'prev': f'{bkw_date.year}/{bkw_date.strftime("%B")}/',
+            'next': f'{fwd_date.year}/{fwd_date.strftime("%B")}/',
+            'calendar': cal_month
+        }
         return cal

@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
-from .models import Course
+from .models import Course, WebsiteUser
 from datetime import datetime
 
 
@@ -103,6 +103,52 @@ class CourseSignUpForm(ModelForm):
 
     class Meta:
         model = Course
-        fileds = ('seats',)
+        fields = ('seats',)
         exclude = ('name', 'course_date', 'course_time', 'description', 'course_fee',
                    'start_time', 'end_time', 'attendees', 'maximum_capacity',)
+
+
+class WebsiteUserForm(ModelForm):
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "First Name",
+                "class": "form-control"
+            }
+        ),
+        label='First Name',
+        required=False)
+
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Last Name",
+                "class": "form-control"
+            }
+        ),
+        label='Last Name',
+        required=False)
+
+    email = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Email",
+                "class": "form-control"
+            }
+        ),
+        label='Email')
+
+    phone = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Phone Number",
+                "class": "form-control"
+            }
+        ),
+        label='Phone Number',
+        required=False)
+
+    class Meta:
+        model = WebsiteUser
+        fields = '__all__'
+        exclude = ['account']
