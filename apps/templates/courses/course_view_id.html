@@ -34,11 +34,11 @@
                         {% with design.images.all|first as image %}
                           {% if forloop.first %}
                             <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                              <img src="/media/{{ image }}" class="d-block w-100">
+                              <img src="/media/{{ image.image }}" class="d-block w-100">
                             </div>
                           {% else %}
                             <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                              <img src="/media/{{ image }}" class="d-block w-100">
+                              <img src="/media/{{ image.image }}" class="d-block w-100">
                             </div>
                           {% endif %}
                           <a class="carousel-control-prev" href="#CarouselWithControls" role="button" data-bs-slide="prev">
