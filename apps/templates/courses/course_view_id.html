@@ -53,38 +53,38 @@
                       {% endfor %}
                       </div>
                     </div>
+                  </div>
+                  <div class="col-lg-5 text-center mx-auto">
+                    <div class="row">
+                      <div class="course-date">
+                        {{ course.course_date }}
+                      </div>
                     </div>
-                    <div class="col-lg-5 text-center mx-auto">
-                      <div class="row">
-                        <div class="course-date">
-                          {{ course.course_date }}
-                        </div>
+                    <div class="row">
+                      <div class="course-time">
+                        {{ course.start_time|time:"g:i a" }} - {{ course.end_time|time:"g:i a" }}
                       </div>
-                      <div class="row">
-                        <div class="course-time">
-                          {{ course.start_time }} - {{ course.end_time }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="course-fee">
-                          {{ seats_left }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="course-fee">
-                          ${{ course.course_fee }} per person
-                        </div>
-                      </div>
-                      <form id="course-signup-form" method=POST autocomplete="on">
-                        {% csrf_token %}
-                        <div class="row">
-                          <div class="input-group input-group-static mb-4">
-                          {{ form }}
-                          </div>
-                        </div>
-                        <input type="submit" value="Book Course" class="btn bg-gradient-primary w-100 my-4 mb-2">
-                      </form>
                     </div>
+                    <div class="row">
+                      <div class="course-fee">
+                        {{ seats_left }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="course-fee">
+                        ${{ course.course_fee }} per person
+                      </div>
+                    </div>
+                    <form id="course-signup-form" method=POST autocomplete="on">
+                      {% csrf_token %}
+                      <div class="row">
+                        <div class="input-group input-group-static mb-4">
+                        {{ form }}
+                        </div>
+                      </div>
+                      <input type="submit" value="Select Design" class="btn bg-gradient-primary w-100 my-4 mb-2">
+                    </form>
+                  </div>
                 </div>
               </div>
               <div class="accordion" id="accordion-panel">

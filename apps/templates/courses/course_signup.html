@@ -25,12 +25,58 @@
               </div>
             </div>
             <div class="card-body">
+              <h2 class="text-center">Choose Your Design</h2>
+              <div class="design-select">
+                {% for design in course.designs.all %}
+                  <div class="grid-item container border-top border-bottom pb-5 pt-5">
+                    <h3 class="name">{{design.name}}</h3>
+                    <div id="CarouselWithControls{{design.name|cut:' '}}" class="carousel slide" data-ride="carousel">
+                      <div class="carousel-inner">
+                        {% for image in design.images.all %}
+                          {% if forloop.first %}
+                            <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                              <img src="/media/{{ image }}" class="d-block w-100 card">
+                            </div>
+                          {% else %}
+                            <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                              <img src="/media/{{ image }}" class="d-block w-100 card">
+                            </div>
+                          {% endif %}
+                          <a class="carousel-control-prev" href="#CarouselWithControls{{design.name|cut:' '}}" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                          <a class="carousel-control-next" href="#CarouselWithControls{{design.name|cut:' '}}" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="item-details">
+                      <h4>Details</h4>
+                      {{ design.description }}
+                      <table class="table">
+                        <tr>
+                          <td>Weight</td>
+                          <td>
+                          {{ design.weight }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Stone Count</td>
+                          <td>
+                          {{ design.stones }}
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
               <div class="container">
                 <div class="row">
-                  <div class="col-lg-7 text-center mx-auto">
-                    Picture
-                  </div>
-                  <div class="col-lg-5 text-center mx-auto">
+                  <div class="col-lg-12 text-center mx-auto">
                     <div class="row">
                       <div class="course-date">
                         {{ course.course_date }}
@@ -38,7 +84,7 @@
                     </div>
                     <div class="row">
                       <div class="course-time">
-                        {{ course.start_time }} - {{ course.end_time }}
+                        {{ course.start_time|time:"g:i a" }} - {{ course.end_time|time:"g:i a" }}
                       </div>
                     </div>
                     <div class="row">
@@ -58,7 +104,7 @@
                         {{ form }}
                         </div>
                       </div>
-                      <input type="submit" value="Book Course" class="btn bg-gradient-primary w-30 my-4 mb-2">
+                      <input type="submit" value="Book Course" class="btn bg-gradient-primary my-4 mb-2">
                     </form>
                   </div>
                 </div>
@@ -101,4 +147,15 @@
 {% endblock content %}
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<script src="{{ ASSETS_ROOT }}/js/plugins/isotope.min.js?v=3.0.6" type="text/javascript"></script>
+<script>
+  var $grid = $('.design-select').isotope({
+    itemSelector: '.test',
+    layoutMode: 'fitRows',
+    getSortData: {
+      name: '.name'
+    }
+  });
+  $grid.isotope({ sortBy: 'name' });
+</script>
 {% endblock javascripts %}

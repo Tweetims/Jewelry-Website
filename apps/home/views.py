@@ -39,13 +39,10 @@ def request_template(request, directory, context={}):
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
-
         load_template = request.path.split('/')[-1]
-
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
-
         if request.path.startswith('/media'):
             return
         else:
@@ -57,12 +54,9 @@ def request_template(request, directory, context={}):
                 except:
                     html_template = loader.get_template('home/page-404.html')
         return HttpResponse(html_template.render(context, request))
-
     except template.TemplateDoesNotExist:
-
         html_template = loader.get_template('home/page-404.html')
         return HttpResponse(html_template.render(context, request))
-
     except:
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
@@ -80,7 +74,6 @@ def course_list(request):
 
 @login_required(redirect_field_name='next', login_url="/login/")
 def course_sign_up(request, course_id):
-    submitted = False
     try:
         searched_course = Course.objects.get(pk=course_id)
     except Course.DoesNotExist:
@@ -92,9 +85,6 @@ def course_sign_up(request, course_id):
                 return redirect(f'/courses/view/{course_id}/')
             searched_course.attendees.add(request.user.websiteuser)
         return HttpResponseRedirect('/courses')
-    else:
-        if 'submitted' in request.GET:
-            submitted = True
     num_seats = searched_course.maximum_capacity - searched_course.attendees.count()
     seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
     context = {

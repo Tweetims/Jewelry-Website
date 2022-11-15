@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.contrib import admin
-from .models import WebsiteUser, Course, Design, Image, Tag
+from .models import WebsiteUser, Course, Design, Image, Tag, WaxConversion, CourseSignUp, User
 
 
 @admin.register(Course)
@@ -21,10 +21,20 @@ class DesignAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+@admin.register(WaxConversion)
+class DesignAdmin(admin.ModelAdmin):
+    ordering = ('id',)
+
+
+@admin.register(CourseSignUp)
+class DesignAdmin(admin.ModelAdmin):
+    ordering = ('course', 'account',)
+
+
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    ordering = ('image', 'tags',)
-    search_fields = ('image', 'tags',)
+    ordering = ('name',)
+    search_fields = ('name',)
 
 
 @admin.register(Tag)

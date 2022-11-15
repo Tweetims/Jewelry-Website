@@ -3,11 +3,10 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-# Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from apps.home.models import WebsiteUser
 
 
@@ -43,9 +42,8 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
+            group, created = Group.objects.get_or_create(name='customer')
             user = form.save()
-            username = form.cleaned_data.get("username")
-            group = Group.objects.get(name='customer')
             user.groups.add(group)
             WebsiteUser.objects.create(
                 account=user,
