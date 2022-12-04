@@ -37,14 +37,6 @@ class Image(models.Model):
         return str(self.name)
 
 
-class WaxConversion(models.Model):
-    id = models.CharField(max_length=50, primary_key=True)
-    value = models.DecimalField('Conversion', blank=True, max_digits=6, decimal_places=2, default=0)
-
-    def __str__(self) -> str:
-        return str(self.id)
-
-
 class Design(models.Model):
     uuid = models.UUIDField(default=uuid4(), editable=False)
     name = models.CharField('Design Name', max_length=256)
@@ -54,7 +46,6 @@ class Design(models.Model):
     tags = models.ManyToManyField(Tag)
     weight = models.DecimalField('Wax Weight', blank=True, max_digits=6, decimal_places=2, default=0)
     stones = models.PositiveIntegerField('Number of Stones', blank=True, default=0)
-    metal_types = models.ManyToManyField(WaxConversion)
 
     def __str__(self) -> str:
         return str(self.name)
@@ -62,11 +53,7 @@ class Design(models.Model):
 
 class Course(models.Model):
     name = models.CharField('Course Name', max_length=256)
-    course_date = models.DateField('Course Date')
-    start_time = models.TimeField('Start Time', default='12:00')
-    end_time = models.TimeField('End Time', default='13:00')
     description = models.TextField('Course Description', max_length=2048)
-    attendees = models.ManyToManyField(WebsiteUser, blank=True)
     course_fee = models.PositiveIntegerField('Course Fee', blank=True, default=200)
     maximum_capacity = models.PositiveIntegerField('Maximum Capacity', blank=True, default=10)
     designs = models.ManyToManyField(Design)
@@ -76,6 +63,16 @@ class Course(models.Model):
         return str(self.name)
 
 
+class CourseDay(models.Model):
+    date = models.DateField('Course Date')
+    start = models.TimeField('Start Time', default='12:00')
+    end = models.TimeField('End Time', default='14:00')
+    course = models.ForeignKey(to=Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.date} at {self.start}-{self.end}'
+
+
 METAL_TYPES = (
     ('silver', 'Silver'),
     ('y10', '10K Yellow Gold'),
@@ -83,8 +80,7 @@ METAL_TYPES = (
     ('y18', '18K Yellow Gold'),
     ('w10', '10K White Gold'),
     ('w14', '14K White Gold'),
-    ('w18', '18K White Gold'),
-    ('pt950', 'Platinum')
+    ('w18', '18K White Gold')
 )
 
 

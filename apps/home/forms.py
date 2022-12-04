@@ -14,15 +14,6 @@ class CourseForm(ModelForm):
             }
         ),
         label='Name')
-    course_date = forms.CharField(
-        widget=forms.DateInput(
-            attrs={
-                "placeholder": "Date",
-                "class": "form-control",
-                'value': datetime.date(datetime.now())
-            }
-        ),
-        label='Date')
     start_time = forms.CharField(
         widget=forms.TimeInput(
             attrs={
@@ -74,7 +65,7 @@ class CourseForm(ModelForm):
 
     class Meta:
         model = Course
-        fileds = ('name', 'course_date', 'course_time', 'description', 'course_fee',)
+        fileds = ('name', 'course_time', 'description', 'course_fee',)
         exclude = ('attendees',)
 
 
@@ -104,7 +95,7 @@ class CourseSignUpForm(ModelForm):
     class Meta:
         model = Course
         fields = ('seats',)
-        exclude = ('name', 'course_date', 'course_time', 'description', 'course_fee',
+        exclude = ('name', 'course_time', 'description', 'course_fee',
                    'start_time', 'end_time', 'attendees', 'maximum_capacity',)
 
 

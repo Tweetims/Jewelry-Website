@@ -55,16 +55,18 @@
                     </div>
                   </div>
                   <div class="col-lg-5 text-center mx-auto">
-                    <div class="row">
-                      <div class="course-date">
-                        {{ course.course_date }}
+                    {% for course_day in course.courseday_set.all %}
+                      <div class="row">
+                        <div class="course-date">
+                          {{ course_day.date }}
+                        </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="course-time">
-                        {{ course.start_time|time:"g:i a" }} - {{ course.end_time|time:"g:i a" }}
+                      <div class="row">
+                        <div class="course-time">
+                          {{ course_day.start|time:"g:i a" }} - {{ course_day.end|time:"g:i a" }}
+                        </div>
                       </div>
-                    </div>
+                    {% endfor %}
                     <div class="row">
                       <div class="course-fee">
                         {{ seats_left }}

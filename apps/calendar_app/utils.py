@@ -2,7 +2,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from calendar import HTMLCalendar
-from apps.home.models import Course
+from apps.home.models import Course, CourseDay
 import calendar
 
 
@@ -38,13 +38,13 @@ class Calendar(HTMLCalendar):
     # filter courses by year and month
     def get_month(self):
         course_data = {}
-        courses = Course.objects.filter(course_date__year=self.year, course_date__month=self.month)
-        for course in courses:
-            if not course_data.get(course.course_date.day):
-                course_data[course.course_date.day] = []
-            course_data[course.course_date.day].append({
-                'id': course.id,
-                'name': course.name
+        course_days = CourseDay.objects.filter(date__year=self.year, date__month=self.month)
+        for course_day in course_days:
+            if not course_data.get(course_day.date.day):
+                course_data[course_day.date.day] = []
+            course_data[course_day.date.day].append({
+                'id': course_day.course.id,
+                'name': course_day.course.name
             })
 
         ref_date = datetime.datetime(self.year, self.month, 1)
@@ -65,8 +65,8 @@ class Calendar(HTMLCalendar):
                     continue
                 day = {'day': cal_info[i][j], 'courses': []}
                 if day['day'] in course_data:
-                    for course in course_data[day['day']]:
-                        day['courses'].append({'id': course['id'], 'name': course['name']})
+                    for course_day in course_data[day['day']]:
+                        day['courses'].append({'id': course_day['id'], 'name': course_day['name']})
                 cal_week.append(day)
             cal_month.append(cal_week)
         self.formatweekheader()
