@@ -27,6 +27,7 @@
             <div class="card-body">
               <h2 class="text-center">Choose Your Design</h2>
               <div class="design-select">
+                {% load home_extras %}
                 {% for design in course.designs.all %}
                   <div class="grid-item container border-top border-bottom pb-5 pt-5">
                     <h3 class="name">{{design.name}}</h3>
@@ -58,9 +59,31 @@
                       {{ design.description }}
                       <table class="table">
                         <tr>
-                          <td>Weight</td>
+                          <td>Precious Metal</td>
+                          <td>Cost</td>
+                        </tr>
+                        <tr>
+                          <td>14K White Gold</td>
                           <td>
-                          {{ design.weight }}
+                          {% multiply design.weight wax_conv.14kw metal_prices.14k %}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>14K Yellow Gold</td>
+                          <td>
+                          {% multiply design.weight wax_conv.14ky metal_prices.14k %}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>18K White Gold</td>
+                          <td>
+                          {% multiply design.weight wax_conv.18kw metal_prices.18k %}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>18K Yellow Gold</td>
+                          <td>
+                          {% multiply design.weight wax_conv.18ky metal_prices.18k %}
                           </td>
                         </tr>
                         <tr>

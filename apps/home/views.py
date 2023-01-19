@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
 from apps.authentication.decorators import allowed_users
+from core.settings import METAL_PRICES, WAX_CONVERSIONS
 
 from .models import Course
 from .forms import CourseForm, CourseSignUpForm, WebsiteUserForm
@@ -85,12 +86,14 @@ def course_sign_up(request, course_id):
                 return redirect(f'/courses/view/{course_id}/')
             searched_course.attendees.add(request.user.websiteuser)
         return HttpResponseRedirect('/courses')
-    num_seats = searched_course.maximum_capacity - searched_course.attendees.count()
+    num_seats = searched_course.maximum_capacity - searched_course.coursesignup_set.all().count()
     seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
     context = {
         'course': searched_course,
         'seats_left': seats,
-        'form': form
+        'form': form,
+        'wax_conv': WAX_CONVERSIONS,
+        'metal_prices': METAL_PRICES
     }
     html_template = loader.get_template(f'courses/course_signup.html')
     return HttpResponse(html_template.render(context, request))
@@ -133,7 +136,7 @@ def course_view(request, course_id):
         searched_course = Course.objects.get(pk=course_id)
     except Course.DoesNotExist:
         return HttpResponseRedirect('/courses')
-    num_seats = searched_course.maximum_capacity - searched_course.attendees.count()
+    num_seats = searched_course.maximum_capacity - searched_course.coursesignup_set.all().count()
     seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
     context = {
         'seats_left': seats,

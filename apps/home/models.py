@@ -44,7 +44,7 @@ class Design(models.Model):
     notes = models.TextField('Notes', max_length=2048, blank=True, null=True)
     images = models.ManyToManyField(Image)
     tags = models.ManyToManyField(Tag)
-    weight = models.DecimalField('Wax Weight', blank=True, max_digits=6, decimal_places=2, default=0)
+    weight = models.FloatField('Wax Weight', blank=True, default=0)
     stones = models.PositiveIntegerField('Number of Stones', blank=True, default=0)
 
     def __str__(self) -> str:
