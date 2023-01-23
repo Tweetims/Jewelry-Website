@@ -93,7 +93,7 @@ if os.environ.get('DB', '') == 'SQLITE':
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
         }
     }
-elif os.environ.get('$DB', '') == 'POSTGRES':
+elif os.environ.get('DB', '') == 'POSTGRES':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
