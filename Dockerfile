@@ -13,3 +13,5 @@ COPY . .
 
 # gunicorn
 CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]
+
+EXPOSE 8000
