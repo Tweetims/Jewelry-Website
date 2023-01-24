@@ -11,12 +11,12 @@ from whitenoise import WhiteNoise
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root='./apps/static')
-application.add_files("./apps/static/assets/css")
-application.add_files("./apps/static/assets/fonts")
-application.add_files("./apps/static/assets/img")
-application.add_files("./apps/static/assets/js")
-application.add_files("./apps/static/assets/scss")
+application = WhiteNoise(application, root='./static')
+application.add_files("./static/assets/css")
+application.add_files("./static/assets/fonts")
+application.add_files("./static/assets/img")
+application.add_files("./static/assets/js")
+application.add_files("./static/assets/scss")
 
 
 
