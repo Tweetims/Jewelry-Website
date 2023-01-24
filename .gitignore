@@ -19,7 +19,6 @@ venv
 .DS_Store
 
 # javascript
-package-lock.json
 
 
 .vscode/symbols.json
