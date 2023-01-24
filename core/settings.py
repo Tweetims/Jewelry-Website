@@ -8,7 +8,6 @@ import environ
 import os
 
 import dj_database_url
-import django_heroku
 from django.core.management.utils import get_random_secret_key
 
 
@@ -175,5 +174,3 @@ METAL_PRICES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-django_heroku.settings(locals())
