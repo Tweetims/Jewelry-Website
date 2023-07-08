@@ -28,6 +28,7 @@ class CourseAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description', 'tags',)
     list_filter = ('name', 'tags',)
     inlines = [CourseDayInline, CourseSignUpInline, ]
+    readonly_fields = ['designs_preview']
 
     @staticmethod
     def dates(request):
@@ -39,7 +40,6 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ('date', 'start', 'end', 'course')
     search_fields = ('date', 'course',)
     list_filter = ('date', 'course',)
-
 
 @admin.register(Design)
 class DesignAdmin(admin.ModelAdmin):
@@ -59,6 +59,7 @@ class DesignAdmin(admin.ModelAdmin):
 class ImageAdmin(admin.ModelAdmin):
     ordering = ('name',)
     search_fields = ('name',)
+    readonly_fields = ['image_preview']
 
 
 @admin.register(Tag)

@@ -31,16 +31,16 @@
                 {% for design in course.designs.all %}
                   <div class="grid-item container border-top border-bottom pb-5 pt-5">
                     <h3 class="name">{{design.name}}</h3>
-                    <div id="CarouselWithControls{{design.name|cut:' '}}" class="carousel slide" data-ride="carousel">
+                    <div id="CarouselWithControls{{design.name|cut:' '}}" class="carousel slide w-50" data-ride="carousel">
                       <div class="carousel-inner">
                         {% for image in design.images.all %}
                           {% if forloop.first %}
                             <div class="carousel-item active">
-                              <img src="/media/{{ image.image }}" class="d-block w-100 card">
+                              <img src="{{ image.url }}" class="d-block w-100 card">
                             </div>
                           {% else %}
                             <div class="carousel-item">
-                              <img src="/media/{{ image.image }}" class="d-block w-100 card">
+                              <img src="{{ image.url }}" class="d-block w-100 card">
                             </div>
                           {% endif %}
                           <a class="carousel-control-prev" href="#CarouselWithControls{{design.name|cut:' '}}" role="button" data-bs-slide="prev">

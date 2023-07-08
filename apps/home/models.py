@@ -8,6 +8,7 @@ from enum import auto
 from django.db import models
 from django.contrib.auth.models import User
 from uuid import uuid4
+from django.utils.html import mark_safe
 
 
 class WebsiteUser(models.Model):
@@ -30,11 +31,14 @@ class Tag(models.Model):
 
 class Image(models.Model):
     name = models.CharField('Image Name', max_length=256, default='Image')
-    image = models.ImageField('Design Image')
+    url = models.URLField('URL', default='')
     tags = models.ManyToManyField(Tag)
 
     def __str__(self) -> str:
         return str(self.name)
+
+    def image_preview(self):
+        return mark_safe(f'<img src="{self.url}" width="300"/>')
 
 
 class Design(models.Model):
@@ -61,6 +65,12 @@ class Course(models.Model):
 
     def __str__(self) -> str:
         return str(self.name)
+
+    def designs_preview(self):
+        ret = ''
+        for design in self.designs.all():
+            ret += f'<img src="{design.images.all()[0].url}" width="100"/>'
+        return mark_safe(ret)
 
 
 class CourseDay(models.Model):
