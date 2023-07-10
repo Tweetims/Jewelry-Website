@@ -15,7 +15,7 @@ class CourseDayInline(admin.TabularInline):
 
 class CourseSignUpInline(admin.TabularInline):
     model = CourseSignUp
-    readonly_fields = ('account', )
+    readonly_fields = ('account', 'design', 'design_preview', 'metal_type')
     extra = 0
 
     def has_add_permission(self, request, obj=None):

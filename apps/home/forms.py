@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
-from .models import Course, WebsiteUser
+from .models import Course, WebsiteUser, Design, CourseSignUp
 from datetime import datetime
 
 
@@ -72,31 +72,14 @@ class CourseForm(ModelForm):
 class CourseSignUpForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        '''
-        course = Course.objects.filter(
-            pk=self.instance.id
+        self.fields['design'] = forms.ModelChoiceField(
+            queryset=self.instance.course.designs.all(),
+            widget=forms.RadioSelect()
         )
-        max_book = self.instance.maximum_capacity - course[0].attendees.count()
-        self.fields['seats'].widget.attrs['max'] = max_book
-        '''
-
-    seats = forms.IntegerField(
-        widget=forms.NumberInput(
-            attrs={
-                "placeholder": "0",
-                "class": "form-control",
-                'value': 0,
-                'min': 1,
-                'max': 1
-            }
-        ),
-        label='Book Seats')
 
     class Meta:
-        model = Course
-        fields = ('seats',)
-        exclude = ('name', 'course_time', 'description', 'course_fee',
-                   'start_time', 'end_time', 'attendees', 'maximum_capacity',)
+        model = CourseSignUp
+        fields = ('design', 'metal_type',)
 
 
 class WebsiteUserForm(ModelForm):

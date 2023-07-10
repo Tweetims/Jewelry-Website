@@ -65,33 +65,47 @@
                         <tr>
                           <td>14K White Gold</td>
                           <td>
-                          {% multiply design.weight wax_conv.14kw metal_prices.14k %}
+                          ${% multiply3 design.weight wax_conv.14kw metal_prices.14k %}
                           </td>
                         </tr>
                         <tr>
                           <td>14K Yellow Gold</td>
                           <td>
-                          {% multiply design.weight wax_conv.14ky metal_prices.14k %}
+                          ${% multiply3 design.weight wax_conv.14ky metal_prices.14k %}
                           </td>
                         </tr>
                         <tr>
                           <td>18K White Gold</td>
                           <td>
-                          {% multiply design.weight wax_conv.18kw metal_prices.18k %}
+                          ${% multiply3 design.weight wax_conv.18kw metal_prices.18k %}
                           </td>
                         </tr>
                         <tr>
                           <td>18K Yellow Gold</td>
                           <td>
-                          {% multiply design.weight wax_conv.18ky metal_prices.18k %}
+                          ${% multiply3 design.weight wax_conv.18ky metal_prices.18k %}
                           </td>
                         </tr>
                         <tr>
-                          <td>Stone Count</td>
+                          <td>Sterling Silver</td>
                           <td>
-                          {{ design.stones }}
+                          Included
                           </td>
                         </tr>
+                        <tr>
+                          <td>Diamonds</td>
+                          <td>
+                          ${% multiply2 design.stones melee_price %}
+                          </td>
+                        </tr>
+                        {% if design.stones > 0 %}
+                        <tr>
+                          <td>CZ</td>
+                          <td>
+                          Included
+                          </td>
+                        </tr>
+                        {% endif %}
                       </table>
                     </div>
                   </div>
@@ -126,7 +140,7 @@
                       {% csrf_token %}
                       <div class="row">
                         <div class="input-group input-group-static mb-4">
-                        {{ form }}
+                          {{ form }}
                         </div>
                       </div>
                       <input type="submit" value="Book Course" class="btn bg-gradient-primary my-4 mb-2">

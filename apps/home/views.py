@@ -11,9 +11,9 @@ from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
 from apps.authentication.decorators import allowed_users
-from core.settings import METAL_PRICES, WAX_CONVERSIONS
+from core.settings import METAL_PRICES, WAX_CONVERSIONS, MELEE_PRICE
 
-from .models import Course
+from .models import Course, CourseSignUp
 from .forms import CourseForm, CourseSignUpForm, WebsiteUserForm
 
 
@@ -79,12 +79,13 @@ def course_sign_up(request, course_id):
         searched_course = Course.objects.get(pk=course_id)
     except Course.DoesNotExist:
         return HttpResponseRedirect('/courses')
-    form = CourseSignUpForm(request.POST or None, instance=searched_course)
+    sign_up = CourseSignUp(account=request.user.websiteuser, course=searched_course)
+    form = CourseSignUpForm(request.POST or None, instance=sign_up)
     if request.method == "POST":
         if form.is_valid():
             if not request.user.is_authenticated:
                 return redirect(f'/courses/view/{course_id}/')
-            searched_course.attendees.add(request.user.websiteuser)
+            form.save()
         return HttpResponseRedirect('/courses')
     num_seats = searched_course.maximum_capacity - searched_course.coursesignup_set.all().count()
     seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
@@ -93,7 +94,8 @@ def course_sign_up(request, course_id):
         'seats_left': seats,
         'form': form,
         'wax_conv': WAX_CONVERSIONS,
-        'metal_prices': METAL_PRICES
+        'metal_prices': METAL_PRICES,
+        'melee_price': MELEE_PRICE
     }
     html_template = loader.get_template(f'courses/course_signup.html')
     return HttpResponse(html_template.render(context, request))

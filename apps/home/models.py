@@ -16,10 +16,13 @@ class WebsiteUser(models.Model):
     last_name = models.CharField(max_length=256, null=True)
     email = models.EmailField('User Email', max_length=256, null=True)
     phone = models.CharField('User Phone Number', max_length=20, blank=True, null=True)
-    account = models.OneToOneField(User, on_delete=models.CASCADE, null=True, editable=False)
+    account = models.OneToOneField(User, on_delete=models.CASCADE, null=True, editable=True)
     
     def __str__(self) -> str:
         return f'{self.account}'
+
+    def name(self):
+        return f'{self.last_name}, {self.first_name}'
 
 
 class Tag(models.Model):
@@ -49,10 +52,13 @@ class Design(models.Model):
     images = models.ManyToManyField(Image)
     tags = models.ManyToManyField(Tag)
     weight = models.FloatField('Wax Weight', blank=True, default=0)
-    stones = models.PositiveIntegerField('Number of Stones', blank=True, default=0)
+    stones = models.FloatField('Total Carat Weight', blank=True, default=0)
 
     def __str__(self) -> str:
-        return str(self.name)
+        return self.name
+
+    def get_image(self):
+        return mark_safe(f'{self.name}<img src="{self.images.all()[0].url}" width="300"/>')
 
 
 class Course(models.Model):
@@ -99,6 +105,10 @@ class CourseSignUp(models.Model):
     course = models.ForeignKey(to=Course, on_delete=models.CASCADE)
     design = models.ForeignKey(to=Design, on_delete=models.CASCADE)
     metal_type = models.CharField('Metal Type', max_length=256, choices=METAL_TYPES)
+    checked_in = models.BooleanField('Checked In', default=False)
 
     def __str__(self):
-        return f'{self.account} {self.course} {self.design} {self.metal_type}'
+        return f'{self.account.name()} {self.course} {self.design}'
+
+    def design_preview(self):
+        return mark_safe(f'<img src="{self.design.images.all()[0].url}" width="100"/>')
