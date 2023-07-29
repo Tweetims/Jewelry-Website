@@ -1,6 +1,6 @@
 {% extends "layouts/base-fullscreen.html" %}
 
-{% block title %} {{ course.name }} {% endblock %}
+{% block title %} {{ design.name }} {% endblock %}
 
 {% block body_class %} sign-in-basic {% endblock %}
 
@@ -21,17 +21,16 @@
           <div class="card d-flex blur justify-content-center shadow-lg my-sm-0 my-sm-6 mt-8 mb-5">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
               <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
-                  <h3 class="text-white text-primary mb-0 text-center">{{ course.name }}</h3>
+                  <h3 class="text-white text-primary mb-0 text-center">{{ design.name }} Details</h3>
               </div>
             </div>
             <div class="card-body">
-              <h2 class="text-center">Choose Your Design</h2>
-              <div class="design-select">
+              <h2 class="text-center"></h2>
+              <div class="design-select py-2">
                 {% load home_extras %}
-                {% for design in course.designs.all %}
                   <div class="grid-item container border-top border-bottom pb-5 pt-5">
                     <h3 class="name">{{design.name}}</h3>
-                    <div id="CarouselWithControls{{design.name|cut:' '}}" class="carousel slide w-50" data-ride="carousel">
+                    <div id="CarouselWithControls{{design.name|cut:' '}}" class="carousel slide w-50 pb-5" data-ride="carousel">
                       <div class="carousel-inner">
                         {% for image in design.images.all %}
                           {% if forloop.first %}
@@ -51,96 +50,102 @@
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                           </a>
-                        {% endfor %}
                       </div>
                     </div>
                     <div class="item-details">
                       <h4>Details</h4>
                       {{ design.description }}
-                      <table class="table">
+                      <table class="table table-striped table-hover">
+                        <thead>
+                            <th>Precious Metal</th>
+                            <th>Cost</th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>14K Gold</td>
+                            <td>
+                            ${% multiply2 design.weight metal_prices.14k %}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>18K Gold</td>
+                            <td>
+                            ${% multiply2 design.weight metal_prices.18k %}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>10K Gold</td>
+                            <td>
+                            ${% multiply2 design.weight metal_prices.10k %}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Sterling Silver</td>
+                            <td>
+                            Included
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      {% if design.ctw %}
+                      <table class="table table-striped table-hover">
+                        <thead>
+                          <th>Precious Stones</th>
+                          <th>Cost</th>
+                        </thead>
                         <tr>
-                          <td>Precious Metal</td>
-                          <td>Cost</td>
-                        </tr>
-                        <tr>
-                          <td>14K White Gold</td>
+                          <td>Natural Diamonds</td>
                           <td>
-                          ${% multiply3 design.weight wax_conv.14kw metal_prices.14k %}
+                          ${% multiply2 design.ctw melee_prices.natural %}
                           </td>
                         </tr>
                         <tr>
-                          <td>14K Yellow Gold</td>
+                          <td>Lab Grown Diamonds</td>
                           <td>
-                          ${% multiply3 design.weight wax_conv.14ky metal_prices.14k %}
+                          ${% multiply2 design.ctw melee_prices.lab %}
                           </td>
                         </tr>
-                        <tr>
-                          <td>18K White Gold</td>
-                          <td>
-                          ${% multiply3 design.weight wax_conv.18kw metal_prices.18k %}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>18K Yellow Gold</td>
-                          <td>
-                          ${% multiply3 design.weight wax_conv.18ky metal_prices.18k %}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Sterling Silver</td>
-                          <td>
-                          Included
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Diamonds</td>
-                          <td>
-                          ${% multiply2 design.stones melee_price %}
-                          </td>
-                        </tr>
-                        {% if design.stones > 0 %}
                         <tr>
                           <td>CZ</td>
                           <td>
                           Included
                           </td>
                         </tr>
-                        {% endif %}
                       </table>
+                      {% endif %}
                     </div>
                   </div>
                 {% endfor %}
               </div>
-              <div class="container">
+              <div class="container py-2">
                 <div class="row">
+                  <div class="card-header position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
+                        <h4 class="text-white text-primary mb-0 text-center">Booking Details</h4>
+                    </div>
+                  </div>
                   <div class="col-lg-12 text-center mx-auto">
-                    {% for course_day in course.courseday_set.all %}
-                      <div class="row">
-                        <div class="course-date">
-                          {{ course_day.date }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="course-time">
-                          {{ course_day.start|time:"g:i a" }} - {{ course_day.end|time:"g:i a" }}
-                        </div>
-                      </div>
-                    {% endfor %}
-                    <div class="row">
-                      <div class="course-fee">
-                        {{ seats_left }}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="course-fee">
-                        ${{ course.course_fee }} per person
-                      </div>
-                    </div>
                     <form id="course-signup-form" method=POST autocomplete="on">
                       {% csrf_token %}
                       <div class="row">
+                        <h4>Base design cost: ${{ design.course_fee }}</h4>
                         <div class="input-group input-group-static mb-4">
-                          {{ form }}
+                          {{ form.metal_type.label }}
+                          {{ form.metal_type }}
+                          {{ linebreaksbr }}
+                          {{ form.purity.label }}
+                          {{ form.purity }}
+                          {% if design.ctw %}
+                            <div class="input-group input-daterange">
+                                {{ form.date1.label }}
+                                {{ form.date1 }}
+                                {{ form.date2.label }}
+                                {{ form.date2 }}
+                            </div>
+                          {% else %}
+                            {{ form.date1 }}
+                          {% endif %}
                         </div>
                       </div>
                       <input type="submit" value="Book Course" class="btn bg-gradient-primary my-4 mb-2">
@@ -150,24 +155,12 @@
               </div>
               <div class="accordion" id="accordion-panel">
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="acordeon-h1">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#acordeon-c1" aria-expanded="true" aria-controls="acordeon-c1">
-                      About The Course
-                    </button>
-                  </h2>
-                  <div id="acordeon-c1" class="accordion-collapse collapse show" aria-labelledby="acordeon-h1">
-                    <div class="accordion-body">
-                      {{ course.description }}
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-item">
                   <h2 class="accordion-header" id="acordeon-h2">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acordeon-c2" aria-expanded="false" aria-controls="acordeon-c2">
                       Cancellation/Refund Policy
                     </button>
                   </h2>
-                  <div id="acordeon-c2" class="accordion-collapse collapse" aria-labelledby="acordeon-h2">
+                  <div id="acordeon-c2" class="accordion-collapse collapse show" aria-labelledby="acordeon-h2">
                     <div class="accordion-body">
                       <strong>All sales are final.</strong> There are no refunds offered. Cancellations can be made at least <strong>One</strong> hour before the class starts
                     </div>
@@ -196,5 +189,22 @@
     }
   });
   $grid.isotope({ sortBy: 'name' });
+
+  $(document).ready(function() {
+       $('#id_date1').datepicker({
+            firstDay: 1,
+            dateFormat: "yy-mm-dd",
+            defaultDate: 0,
+            minDate: 0
+        });
+    });
+    $(document).ready(function() {
+       $('#id_date2').datepicker({
+            firstDay: 1,
+            dateFormat: "yy-mm-dd",
+            defaultDate: 0,
+            minDate: 0
+        });
+    });
 </script>
 {% endblock javascripts %}

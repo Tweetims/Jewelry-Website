@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from sqlite3 import OperationalError
 
 
 class HomeConfig(AppConfig):
@@ -12,12 +11,10 @@ class HomeConfig(AppConfig):
             self.create_tag('Ring')
             self.create_tag('Earring')
             self.create_tag('Pendant')
-            self.create_tag("Men's")
-            self.create_tag("Women's")
-            self.create_tag("White Gold")
-            self.create_tag("Yellow Gold")
-            self.create_tag("Silver")
-            self.create_tag("Stones")
+            self.create_tag("Mens")
+            self.create_tag("Womens")
+            self.create_tag("Two-Tone")
+            self.create_tag("Stone Setting")
 
             from django.contrib.auth.models import Group
             Group.objects.get_or_create(name='customer')

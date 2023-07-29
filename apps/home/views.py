@@ -2,7 +2,7 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
+import apps.home.config
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -11,10 +11,10 @@ from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
 from apps.authentication.decorators import allowed_users
-from core.settings import METAL_PRICES, WAX_CONVERSIONS, MELEE_PRICE
 
-from .models import Course, CourseSignUp
-from .forms import CourseForm, CourseSignUpForm, WebsiteUserForm
+from .models import CourseSignUp, Design
+from .forms import CourseSignUpForm, WebsiteUserForm
+from django.db.models.query_utils import Q
 
 
 def index(request):
@@ -64,116 +64,42 @@ def request_template(request, directory, context={}):
 
 
 @login_required(redirect_field_name='next', login_url="/login/")
-def course_list(request):
-    course_list = Course.objects.all()
-    context = {
-        'course_list': course_list
-    }
-    html_template = loader.get_template('courses/course_list.html')
-    return HttpResponse(html_template.render(context, request))
-
-
-@login_required(redirect_field_name='next', login_url="/login/")
-def course_sign_up(request, course_id):
-    try:
-        searched_course = Course.objects.get(pk=course_id)
-    except Course.DoesNotExist:
-        return HttpResponseRedirect('/courses')
-    sign_up = CourseSignUp(account=request.user.websiteuser, course=searched_course)
+def course_sign_up(request, uuid):
+    design = Design.objects.get(uuid=uuid)
+    sign_up = CourseSignUp(account=request.user.websiteuser, design=design)
     form = CourseSignUpForm(request.POST or None, instance=sign_up)
     if request.method == "POST":
         if form.is_valid():
             if not request.user.is_authenticated:
-                return redirect(f'/courses/view/{course_id}/')
+                return redirect('/')
             form.save()
-        return HttpResponseRedirect('/courses')
-    num_seats = searched_course.maximum_capacity - searched_course.coursesignup_set.all().count()
-    seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
+        else:
+            pass
     context = {
-        'course': searched_course,
-        'seats_left': seats,
+        'design': design,
         'form': form,
-        'wax_conv': WAX_CONVERSIONS,
-        'metal_prices': METAL_PRICES,
-        'melee_price': MELEE_PRICE
+        'metal_prices': apps.home.config.MyConfig.METAL_PRICES,
+        'melee_prices': apps.home.config.MyConfig.MELEE_PRICES,
     }
     html_template = loader.get_template(f'courses/course_signup.html')
     return HttpResponse(html_template.render(context, request))
 
 
-@staff_member_required
-def add_course(request):
-    submitted = False
+def design_search(request):
+    context = {
+        'metal_prices': apps.home.config.MyConfig.METAL_PRICES,
+        'melee_prices': apps.home.config.MyConfig.MELEE_PRICES,
+    }
     if request.method == "POST":
-        form = CourseForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/courses/add?submitted=True')
+        searched = request.POST['searched']
+        results = Design.objects.filter(Q(name__contains=searched) | Q(tags__name__contains=searched)).distinct()
+        context['searched'] = searched
+        context['designs'] = results
     else:
-        form = CourseForm
-        if 'submitted' in request.GET:
-            submitted = True
-    context = {
-        'form': form,
-        'submitted': submitted
-    }
-    html_template = loader.get_template('courses/add_course.html')
+        results = Design.objects.order_by('?')[:10]
+        context['designs'] = results
+    html_template = loader.get_template(f'courses/design_search.html')
     return HttpResponse(html_template.render(context, request))
-
-
-@staff_member_required
-def edit_course(request):
-    searched_course = Course.objects.all()
-    context = {
-        'course_list': searched_course
-    }
-    html_template = loader.get_template('courses/course_edit.html')
-    return HttpResponse(html_template.render(context, request))
-
-
-def course_view(request, course_id):
-    if request.POST:
-        return HttpResponseRedirect(f'/courses/signup/{course_id}/')
-    try:
-        searched_course = Course.objects.get(pk=course_id)
-    except Course.DoesNotExist:
-        return HttpResponseRedirect('/courses')
-    num_seats = searched_course.maximum_capacity - searched_course.coursesignup_set.all().count()
-    seats = f'{num_seats} seat{"s" if num_seats != 1 else ""} left'
-    context = {
-        'seats_left': seats,
-        'course': searched_course
-    }
-    html_template = loader.get_template('courses/course_view_id.html')
-    return HttpResponse(html_template.render(context, request))
-    
-    
-@staff_member_required
-def edit_course_id(request, course_id):
-    try:
-        searched_course = Course.objects.get(pk=course_id)
-    except Course.DoesNotExist:
-        return HttpResponseRedirect('/courses/edit')
-    form = CourseForm(request.POST or None, instance=searched_course)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect('/courses/edit')
-    context = {
-        'course': searched_course,
-        'form': form
-    }
-    html_template = loader.get_template('courses/course_edit_id.html')
-    return HttpResponse(html_template.render(context, request))
-
-
-@staff_member_required
-def delete_course_id(request, course_id):
-    try:
-        searched_course = Course.objects.get(pk=course_id)
-        searched_course.delete()
-    except Course.DoesNotExist:
-        pass
-    return HttpResponseRedirect('/courses/edit')
 
 
 @login_required(login_url='login')

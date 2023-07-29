@@ -54,6 +54,22 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.template': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+    },
+}
+
 ROOT_URLCONF = 'core.urls'
 LOGIN_REDIRECT_URL = "home"  # Route defined in home/urls.py
 LOGOUT_REDIRECT_URL = "home"  # Route defined in home/urls.py
@@ -148,24 +164,6 @@ MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-WAX_CONVERSIONS = {
-    'silver': 10.36,
-    '10ky': 11.60,
-    '14ky': 13.08,
-    '18ky': 15.60,
-    '10kw': 11.20,
-    '14kw': 12.65,
-    '18kw': 14.65
-}
-
-METAL_PRICES = {
-    'silver': 0,
-    '10k': 55,
-    '14k': 75,
-    '18k': 95
-}
-
-MELEE_PRICE = 1800
 
 
 #############################################################

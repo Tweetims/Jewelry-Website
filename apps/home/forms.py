@@ -1,85 +1,67 @@
 from django import forms
 from django.forms import ModelForm
-from django.core.exceptions import ValidationError
-from .models import Course, WebsiteUser, Design, CourseSignUp
-from datetime import datetime
-
-
-class CourseForm(ModelForm):
-    name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": "Course Name",
-                "class": "form-control"
-            }
-        ),
-        label='Name')
-    start_time = forms.CharField(
-        widget=forms.TimeInput(
-            attrs={
-                "placeholder": 'Time',
-                "class": "form-control",
-                'value': "12:00 PM"
-            }
-        ),
-        label='Start Time')
-    end_time = forms.CharField(
-        widget=forms.TimeInput(
-            attrs={
-                "placeholder": 'Time',
-                "class": "form-control",
-                'value': "02:00 PM"
-            }
-        ),
-        label='End Time')
-    description = forms.CharField(
-        widget=forms.Textarea(
-            attrs={
-                "placeholder": "Event Description",
-                "class": "form-control",
-                "rows": "4"
-            }
-        ),
-        label='Description')
-    course_fee = forms.IntegerField(
-        widget=forms.NumberInput(
-            attrs={
-                "placeholder": "Event Fee",
-                "class": "form-control",
-                'value': 200,
-                'min': 0
-            }
-        ),
-        label='Fee')
-    maximum_capacity = forms.IntegerField(
-        widget=forms.NumberInput(
-            attrs={
-                "placeholder": "10",
-                "class": "form-control",
-                'value': 10,
-                'min': 1,
-                'max': 15
-            }
-        ),
-        label='Seats')
-
-    class Meta:
-        model = Course
-        fileds = ('name', 'course_time', 'description', 'course_fee',)
-        exclude = ('attendees',)
+from .models import WebsiteUser, CourseSignUp, METAL_TYPES, KARAT
 
 
 class CourseSignUpForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['design'] = forms.ModelChoiceField(
-            queryset=self.instance.course.designs.all(),
-            widget=forms.RadioSelect()
-        )
+    metal_type = forms.ChoiceField(
+        choices=METAL_TYPES,
+        widget=forms.Select(
+            attrs={
+                "class": "form-control"
+            }
+        ),
+        label="Select Metal Types",
+        required=True
+    )
+
+    purity = forms.ChoiceField(
+        choices=KARAT,
+        widget=forms.Select(
+            attrs={
+                "class": "form-control"
+            }
+        ),
+        label="Select Purity",
+        required=True
+    )
+
+    date1 = forms.DateField(
+        input_formats=['%m/%d/%Y'],
+        widget=forms.DateInput(
+            attrs={
+                "class": "form-control"
+            }
+        ),
+        label="Course Date"
+    )
+
+    date2 = forms.DateField(
+        input_formats=['%m/%d/%Y'],
+        widget=forms.DateInput(
+            attrs={
+                "class": "form-control"
+            }
+        ),
+        label="Second Course Date"
+    )
 
     class Meta:
         model = CourseSignUp
-        fields = ('design', 'metal_type',)
+        fields = ('metal_type', 'purity', 'date1')
+
+    def clean(self):
+        super(CourseSignUpForm, self).clean()
+
+        metal_type = self.cleaned_data.get('metal_type')
+        purity = self.cleaned_data.get('purity')
+
+        if metal_type == 'SV' and purity != '925s':
+            self._errors['metal_type'] = self.error_class([
+                'Sterling Silver must be selected with Silver.'
+            ])
+
+        return self.cleaned_data
 
 
 class WebsiteUserForm(ModelForm):

@@ -1,0 +1,87 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Search {% endblock %}
+
+{% block body_class %} sign-in-basic {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+  <link href="{{ ASSETS_ROOT }}/css/courses.css?" rel="stylesheet" />
+{% endblock stylesheets %}
+
+{% block content %}
+
+  {% include 'includes/navigation.html' %}
+
+  <div class="page-header align-items-start min-vh-100">
+    <span class="mask bg-gradient-dark opacity-0"></span>
+    <div class="container my-6">
+      <div class="row">
+        <div class="col-lg-6d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5">
+          <div class="card d-flex blur justify-content-center shadow-lg my-sm-0 my-sm-6 mt-8 mb-5">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-primary shadow-primary border-radius-lg p-3">
+                <center>
+                  <h3 class="text-white text-primary mb-0">Search Designs</h3>
+                </center>
+              </div>
+            </div>
+            <div class="card-body">
+              <form id="design-search" method=POST autocomplete="on">
+                {% csrf_token %}
+                <div class="container">
+                  <div class="row justify-space-between py-2">
+                    <div class="col-lg-4 mx-auto">
+                      <div class="input-group input-group-dynamic mb-4">
+                        <span class="input-group-text"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input class="form-control" placeholder="Search" type="text" name="searched" >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div class="design-select min-height-300">
+                {% load home_extras %}
+                {% for design in designs %}
+                  <div class="design-item card">
+                    <div class="px-3 py-3">
+                      <h5 class="name text-center text-primary pt-2">{{ design.name }}</h5>
+                      {% for image in design.images.all %}
+                        {% if forloop.first %}
+                          <div>
+                            <a href="/designs/{{ design.uuid }}"><img src="{{ image.url }}" class="max-width-200 pb-1"></a>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                      <br>
+                      <p class="mb-0">Weight: {{ design.weight }}g</p>
+                      {% if design.ctw %}
+                        <p class="mb-0">CTW: {{ design.ctw }}ct</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% include 'includes/footer.html' %}
+    </div>
+</div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="{{ ASSETS_ROOT }}/js/plugins/isotope.min.js?v=3.0.6" type="text/javascript"></script>
+<script>
+  var $grid = $('.design-select').isotope({
+    itemSelector: '.design-item',
+    layoutMode: 'fitRows',
+    getSortData: {
+      name: '.name'
+    }
+  });
+  $grid.isotope({ sortBy: 'name' });
+</script>
+{% endblock javascripts %}
