@@ -51,7 +51,7 @@ class Image(models.Model):
 
 
 class Design(models.Model):
-    uuid = models.UUIDField(default=uuid4(), editable=False)
+    uuid = models.UUIDField(default=uuid4, editable=False)
     name = models.CharField('Design Name', max_length=256)
     description = models.TextField('Description', max_length=2048, null=True)
     notes = models.TextField('Notes', max_length=2048, blank=True, null=True)
