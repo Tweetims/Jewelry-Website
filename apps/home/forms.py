@@ -27,7 +27,7 @@ class CourseSignUpForm(ModelForm):
     )
 
     date1 = forms.DateField(
-        input_formats=['%m/%d/%Y'],
+        input_formats=['%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
                 "class": "form-control"
@@ -37,7 +37,7 @@ class CourseSignUpForm(ModelForm):
     )
 
     date2 = forms.DateField(
-        input_formats=['%m/%d/%Y'],
+        input_formats=['%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
                 "class": "form-control"
@@ -56,10 +56,12 @@ class CourseSignUpForm(ModelForm):
         metal_type = self.cleaned_data.get('metal_type')
         purity = self.cleaned_data.get('purity')
 
-        if metal_type == 'SV' and purity != '925s':
+        if metal_type == 'SV' and purity != '925s' or metal_type != 'SV' and purity == '925s':
             self._errors['metal_type'] = self.error_class([
                 'Sterling Silver must be selected with Silver.'
             ])
+            self.fields['metal_type'].widget.attrs.update({'class': 'form-control is-invalid'})
+            self.fields['purity'].widget.attrs.update({'class': 'form-control is-invalid'})
 
         return self.cleaned_data
 

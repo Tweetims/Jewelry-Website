@@ -40,16 +40,16 @@
                   </div>
                 </div>
               </form>
-              <div class="design-select min-height-300">
+              <div class="design-select min-height-300 grid">
                 {% load home_extras %}
                 {% for design in designs %}
-                  <div class="design-item card">
+                  <div class="card grid-item">
                     <div class="px-3 py-3">
                       <h5 class="name text-center text-primary pt-2">{{ design.name }}</h5>
                       {% for image in design.images.all %}
                         {% if forloop.first %}
                           <div>
-                            <a href="/designs/{{ design.uuid }}"><img src="{{ image.url }}" class="max-width-200 pb-1"></a>
+                            <a href="/designs/{{ design.uuid }}">{{ image.image_preview_200w }}</a>
                           </div>
                         {% endif %}
                       {% endfor %}
@@ -84,4 +84,15 @@
   });
   $grid.isotope({ sortBy: 'name' });
 </script>
+<style>
+.grid-item {
+  float: left;
+  width: 250px;
+  height: 300px;
+  border: 2px solid #b6b5b4;
+}
+
+.grid-item--width2 { width: 100px; }
+.grid-item--height2 { height: 100px; }
+</style>
 {% endblock javascripts %}

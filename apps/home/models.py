@@ -2,14 +2,12 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
 from uuid import uuid4
 from django.utils.html import mark_safe
 from django.utils.timezone import now
-from django.contrib.postgres.fields import ArrayField
+from apps.home.storage_backends import PublicMediaStorage
 
 
 class WebsiteUser(models.Model):
@@ -34,20 +32,25 @@ class Tag(models.Model):
 
 
 class Image(models.Model):
-    name = models.CharField('Image Name', max_length=256, default='Image')
-    drive_url = models.URLField('Drive URL', default='')
-    url = models.URLField('URL', default='')
-    tags = models.ManyToManyField(Tag)
+    name = models.CharField('Image Name', max_length=256, default='FILE_NAME')
+    image = models.ImageField('Design Image', blank=True, default='no_image.jpg', null=True, storage=PublicMediaStorage())
 
     def __str__(self) -> str:
         return str(self.name)
 
     def save(self, *args, **kwargs):
-        self.url = f'https://drive.google.com/uc?export=view&id={self.drive_url.split("/")[-2]}'
+        if self.name == "FILE_NAME":
+            self.name = self.image.name.split('.')[:-1][0]
         super(Image, self).save(*args, **kwargs)
 
     def image_preview(self):
-        return mark_safe(f'<img src="{self.url}" width="300"/>')
+        return mark_safe(f'<img src="{PublicMediaStorage().get_full_url()}/{self.image}" width="300"/>')
+
+    def image_preview_200w(self):
+        return mark_safe(f'<img src="{PublicMediaStorage().get_full_url()}/{self.image}" width="300" class="max-width-200 pb-1"/>')
+
+    def image_preview_card(self):
+        return mark_safe(f'<img src="{PublicMediaStorage().get_full_url()}/{self.image}" class="card w-100"/>')
 
 
 class Design(models.Model):
@@ -65,7 +68,11 @@ class Design(models.Model):
         return f'{self.name}'
 
     def get_image(self):
-        return mark_safe(f'{self.name}<img src="{self.images.all()[0].url}" width="300"/>')
+        try:
+            image = self.images.all()[0].image
+        except:
+            image = 'no_image.jpg'
+        return mark_safe(f'{self.name}<img src="{PublicMediaStorage().get_full_url()}/{image}" width="300"/>')
 
 
 KARAT = (
@@ -100,4 +107,8 @@ class CourseSignUp(models.Model):
         return f'{self.account.name()} {self.design} {self.purity} {self.metal_type}'
 
     def design_preview(self):
-        return mark_safe(f'<img src="{self.design.images.all()[0].url}" width="100"/>')
+        try:
+            image = self.design.images.all()[0].image
+        except:
+            image = 'no_image.jpg'
+        return mark_safe(f'{self.name}<img src="{PublicMediaStorage().get_full_url()}/{image}" width="300"/>')

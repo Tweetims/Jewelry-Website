@@ -20,6 +20,8 @@ class CourseSignUpInline(admin.TabularInline):
 class DesignAdmin(admin.ModelAdmin):
     ordering = ('name',)
     search_fields = ('name',)
+    readonly_fields = ['get_image']
+    list_display = ('get_image', 'name')
 
 
 @admin.register(CourseSignUp)
@@ -34,7 +36,8 @@ class DesignAdmin(admin.ModelAdmin):
 class ImageAdmin(admin.ModelAdmin):
     ordering = ('name',)
     search_fields = ('name',)
-    readonly_fields = ['image_preview', 'url']
+    readonly_fields = ['image_preview']
+    list_display = ('image_preview', 'name')
 
 
 @admin.register(Tag)

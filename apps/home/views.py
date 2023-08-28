@@ -73,6 +73,7 @@ def course_sign_up(request, uuid):
             if not request.user.is_authenticated:
                 return redirect('/')
             form.save()
+            return redirect('/')
         else:
             pass
     context = {
@@ -103,7 +104,7 @@ def design_search(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['customer'])
+@allowed_users(allowed_roles=['customer', 'admin'])
 def user_page(request):
     form = WebsiteUserForm(instance=request.user.websiteuser)
     context = {
