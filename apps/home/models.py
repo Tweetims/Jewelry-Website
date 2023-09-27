@@ -43,14 +43,20 @@ class Image(models.Model):
             self.name = self.image.name.split('.')[:-1][0]
         super(Image, self).save(*args, **kwargs)
 
+    def get_image(self):
+        try:
+            return self.image.url
+        except:
+            return 'https://jcs-bucket.sfo3.digitaloceanspaces.com/jcs-bucket/media/no_image.jpg'
+
     def image_preview(self):
-        return mark_safe(f'<img src="{PublicMediaStorage().get_full_url()}/{self.image}" width="300"/>')
+        return mark_safe(f'<img src="{self.get_image()}" width="300"/>')
 
     def image_preview_200w(self):
-        return mark_safe(f'<img src="{PublicMediaStorage().get_full_url()}/{self.image}" width="300" class="max-width-200 pb-1"/>')
+        return mark_safe(f'<img src="{self.get_image()}" width="300" class="max-width-200 pb-1"/>')
 
     def image_preview_card(self):
-        return mark_safe(f'<img src="{PublicMediaStorage().get_full_url()}/{self.image}" class="card w-100"/>')
+        return mark_safe(f'<img src="{self.get_image()}" class="card w-100"/>')
 
 
 class Design(models.Model):
